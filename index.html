@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>   
+<head>
+    <title>X Edit Practise</title>
+    <link rel="stylesheet", href="styles.css">
+    <link rel="manifest", href="manifest.json">
+    <link rel="icon" type="image/x-icon" href="./images/logo.ico">
+
+    <script src="./script.js"></script>
+    
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="description" content="Practise tool for mixing software and techniques">
+    <meta name="author" content="Harrison Graham">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body onload="onLoad()">
+    <div class="banner">
+        <img src="./images/logo.png" alt="logo">
+        <div>
+            <h1>Mixer View</h1>
+            <h2>LR Mix</h2>
+        </div>
+    </div>
+
+    <div class="channels">
+        <div class="channel"> 
+            <div class="channel-blank channel-green"></div>
+            <div class="channel-gate channel-green"><p>GATE</p></div>
+            <div class="channel-dyn channel-green"><p>DYN</p></div>
+            <div class="channel-eq channel-green"><p>EQ</p></div>
+            <div class="channel-pan channel-green">
+                <div class="channel-pan-bar"></div>
+            </div>
+            <div class="channel-label"><p class="channel-label-var">CH 01</p></div>
+            <div class="channel-solo" onclick="toggleSolo.call(this)">
+                <p>SOLO</p>
+                <div class="channel-solo-triangle"></div>
+            </div>
+            <div class="channel-fader">
+                <p class="channel-fader-level">-&infin;</p>
+                <input class="fader" type="range" min="-30" max="10" step="0.05" value="-30"> 
+                <p class="channel-label-const">CH 01</p>
+            </div>
+            <div class="channel-mute" onclick="toggleMute.call(this)">
+                <p>MUTE</p>
+                <div class="channel-mute-triangle"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="buttons">
+        <div class="buttons-left">
+            <div class="buttons-fine"><p>Fine</p></div>
+            <div class="buttons-mutes"><p>Mutes</p></div>
+            <div class="buttons-send-fader"><p>Snd->Fader</p></div>
+            <div class="buttons-bus-select"><p>Bus 1 &#129051;</P></div>
+            <div class="buttons-bus-master"><p>Bus Master</p></div>
+        </div>
+        <div class="buttons-right">
+            <div class="buttons-layer" onclick="layerPressed.call(this)"><p>Layer</p></div>
+        </div>
+    </div>
+</body>
+</html>
