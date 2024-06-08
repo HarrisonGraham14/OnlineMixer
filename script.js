@@ -1,6 +1,6 @@
 const CHANNELLABELS = ["CH 01", "CH 02", "CH 03", "CH 04", "CH 05", "CH 06", "CH 07", "CH 08", "CH 09", "CH 10", "CH 11", "CH 12", "CH 13", "CH 14", "CH 15", "CH 16", "USB", "Rtn 1", "Rtn 2", "Rtn 3", "Rtn 4", "Bus 1", "Bus 2", "Bus 3", "Bus 4", "FXSnd 1", "FXSnd 2", "FXSnd 3", "FXSnd 4", "LR", "DCA 1", "DCA 2", "DCA 3", "DCA 4"]
 let layers = [["CH 1-8", [0, 1, 2, 3, 4, 5, 6, 7]], ["CH 9-16", [8, 9, 10, 11, 12, 13, 14, 15]], ["Aux / FX", [16, 17, 18, 19, 20]], ["Bus", [21, 22, 23, 24]], ["FXSnd / Main", [25, 26, 27, 28, 29]], ["DCA", [30, 31,32, 33]]];
-let maxLayers = 8;
+let maxChannels = 16;
 
 let channelsPanel;
 let blankChannel;
@@ -49,10 +49,15 @@ function refreshLayers() {
 function loadLayer(layerNum) {
     channelsPanel.innerHTML = "";
     
-    for (let i = 0; i < layers[layerNum][1].length && i < maxLayers; i++) {
+    for (let i = 0; i < layers[layerNum][1].length && i < maxChannels; i++) {
         let newChannel = blankChannel.cloneNode(true);
         let id = layers[layerNum][1][i];
         newChannel.id = "channel_" + id;
+
+        // adjusting sizes depending on maxChannels
+        newChannel.style.width = (98.4 / maxChannels) + "%";
+        newChannel.getElementsByClassName("fader")[0].style.height = (8 / maxChannels) + "svh ";
+        newChannel.getElementByClassName("fader")[0].
 
         // displaying user-defined label
         newChannel.getElementsByClassName("channel-label-var")[0].innerHTML = "<p>" + allChannels[id].label + "</p>";
