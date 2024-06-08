@@ -55,6 +55,7 @@ p {
     width: 12.3%;
     margin-right: 0.2%;
     text-align: center;
+    font-size: 2.2svh;
 }
 
 .channel-green {
@@ -187,6 +188,7 @@ p {
     margin: 0.3svh;
     height: 7.8svh;
     line-height: 7.8svh;
+    font-size: 2svh;
     border: 0.2svh solid #191B1A;
     color: #B9BABC;
     text-align: center;
