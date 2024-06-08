@@ -38,7 +38,7 @@
             </div>
             <div class="channel-fader">
                 <p class="channel-fader-level">-&infin;</p>
-                <input class="fader" type="range" min="-30" max="10" step="0.05" value="-30"> 
+                <input class="fader" type="range" min="-30" max="10" step="0.05" value="-30" onclick="updateFader.call(this)">  
                 <p class="channel-label-const">CH 01</p>
             </div>
             <div class="channel-mute" onclick="toggleMute.call(this)">

@@ -62,6 +62,16 @@ function loadLayer(layerNum) {
             newChannel.getElementsByClassName("channel-solo")[0].style.borderColor = "#FDCF00";
             newChannel.getElementsByClassName("channel-solo-triangle")[0].style.borderColor = "transparent transparent transparent #FDCF00";
         }
+
+        // fader level readout
+        newChannel.getElementsByClassName("channel-fader-level")[0].innerHTML = faderReadout(allChannels[id].volume);
+
+        // fader placement
+        let faderPos = allChannels[id].volume == -Infinity ? -90 : allChannels[id].volume;
+        if (faderPos < -10) faderPos = faderPos / 2 - 5;
+        if (faderPos < -20) faderPos = faderPos / 2 - 10;
+        if (faderPos < -25) faderPos = faderPos / 2 - 12.5;
+        newChannel.getElementsByClassName("fader")[0].value = faderPos;
         
         // displaying constant label
         newChannel.getElementsByClassName("channel-label-const")[0].innerHTML = "<p>" + CHANNELLABELS[id] + "</p>";
@@ -86,7 +96,7 @@ function loadLayer(layerNum) {
 }
 
 function toggleSolo() {
-    channelIndex = this.parentNode.id.substring(8);
+    let channelIndex = this.parentNode.id.substring(8);
     let solo = !allChannels[channelIndex].solo
     allChannels[channelIndex].solo = solo;
     this.style.borderColor = solo ? "#FDCF00" : "#191B1A";
@@ -94,11 +104,30 @@ function toggleSolo() {
 }
 
 function toggleMute() {
-    channelIndex = this.parentNode.id.substring(8);
+    let channelIndex = this.parentNode.id.substring(8);
     let mute = !allChannels[channelIndex].mute
     allChannels[channelIndex].mute = mute;
     this.style.borderColor = mute ? "#F81F10" : "#191B1A";
     this.getElementsByClassName("channel-mute-triangle")[0].style.borderColor = "transparent " + (mute ? "#F81F10" : "#5A0000") + " transparent transparent";
+}
+
+function faderReadout(volume) {
+    if (volume <= -90) return "-&infin;";
+    else return (volume > 0 ? "+" : "") + Number(volume).toFixed(1);
+}
+
+function updateFader() {
+    channelIndex = this.parentNode.parentNode.id.substring(8);
+
+    let volume = this.value;
+    if (volume < -10) volume = volume * 2 + 10;
+    if (volume < -30) volume = volume * 2 + 30;
+    if (volume < -50) volume = volume * 2 + 50;
+    if (volume <= -90) volume = -Infinity;
+
+    allChannels[channelIndex].volume = volume;
+    console.log(volume);
+    this.parentNode.getElementsByClassName("channel-fader-level")[0].innerHTML = faderReadout(volume);
 }
 
 function layerPressed() {
