@@ -48,7 +48,7 @@ function refreshLayers() {
 
 function loadLayer(layerNum) {
     channelsPanel.innerHTML = "";
-
+    
     for (let i = 0; i < layers[layerNum][1].length && i < maxLayers; i++) {
         let newChannel = blankChannel.cloneNode(true);
         let id = layers[layerNum][1][i];

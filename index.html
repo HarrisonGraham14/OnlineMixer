@@ -38,6 +38,18 @@
             </div>
             <div class="channel-fader">
                 <p class="channel-fader-level">-&infin;</p>
+                <div class="channel-fader-ticks"></div>
+                <div class="channel-fader-ticks major-tick"></div>
+                <div class="channel-fader-tick-labels">
+                    <p>10</p>
+                    <p>5</p>
+                    <p>0</p>
+                    <p>5</p>
+                    <p>10</p>
+                    <p>20</p>
+                    <p>30</p>
+                    <p>50</p>
+                </div>
                 <div class="channel-fader-groove"></div>
                 <input class="fader" type="range" min="-30" max="10" step="0.05" value="-30" oninput="updateFader.call(this)" onchange="updateFader.call(this)">
                 <p class="channel-label-const">CH 01</p>
@@ -54,7 +66,7 @@
             <div><p>Fine</p></div>
             <div><p>Mutes</p></div>
             <div><p>Snd->Fader</p></div>
-            <div><p>Bus 1 &#129051;</P></div>
+            <div><p>Bus 1 &#11015;</P></div>
             <div><p>Bus Master</p></div>
         </div>
         <div class="buttons-right">

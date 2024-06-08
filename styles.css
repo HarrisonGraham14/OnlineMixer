@@ -122,6 +122,33 @@ p {
     margin-top: 1svh;
 }
 
+.channel-fader-ticks {
+    background: repeating-linear-gradient(to bottom, #B9BABC, #B9BABC 1px, transparent 2px, transparent 3.35svh);
+    width: 4svw;
+    height: 26.8svh;
+    margin: -13.4svh -2svw;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+}
+
+.major-tick {
+    background: linear-gradient(to bottom, transparent calc(6.7svh - 2px), white calc(6.7svh - 2px), white calc(6.7svh + 3px), transparent calc(6.7svh + 3px));
+}
+
+.channel-fader-tick-labels {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: absolute;
+    height: 25.5svh;
+    margin: -14.5svh -3svw;
+    left: 50%;
+    top: 50%;
+    font-size: 1.5svh;
+    text-align: left;
+}
+
 .channel-fader-groove {
     background-color: black;
     width: 1svh;
