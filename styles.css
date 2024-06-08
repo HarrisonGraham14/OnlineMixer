@@ -22,21 +22,21 @@ p {
 }
 
 .banner>img {
-    height: 6vh;
-    padding-left: 0.8vw;
-    padding-right: 0.8vw;
+    height: 6svh;
+    padding-left: 0.8svw;
+    padding-right: 0.8svw;
 }
 
 .banner>div>h1 {
     margin: 0px;
     color: white;
-    font-size: 2.5vh;
+    font-size: 2.5svh;
 }
 
 .banner>div>h2 {
     margin: 0px;
     color: #B9BABC;
-    font-size: 1.5vh;
+    font-size: 1.5svh;
 }
 
 .channels {
@@ -59,10 +59,10 @@ p {
 
 .channel-green {
     background-color: #002D2A;
-    height: 4.5vh;
-    line-height: 4.5vh;
-    margin-top: 0.4vh;
-    border: 0.4vh solid #176363;
+    height: 4.5svh;
+    line-height: 4.5svh;
+    margin-top: 0.4svh;
+    border: 0.4svh solid #176363;
     color: #176363;
 }
 
@@ -71,13 +71,13 @@ p {
 }
 
 .channel-pan {
-    margin: 0.4vh;
+    margin: 0.4svh;
     border-style: none;
 }
 
 .channel-pan-bar {
     background-color: #10E5EB;
-    width: 0.4vh;
+    width: 0.4svh;
     height: 100%;
     position: relative;
     left: 50%;
@@ -85,16 +85,16 @@ p {
 
 .channel-label {
     background-color: white;
-    height: 6.1vh;
-    line-height: 6.1vh;
-    margin: 0.4vh;
+    height: 6.1svh;
+    line-height: 6.1svh;
+    margin: 0.4svh;
 }
 
 .channel-solo {
     background-color: #313439;
-    height: 5.1vh;
-    line-height: 5.1vh;
-    border: 0.2vh solid #191B1A;
+    height: 5.1svh;
+    line-height: 5.1svh;
+    border: 0.2svh solid #191B1A;
     color: #B9BABC;
     position: relative;
 }
@@ -103,7 +103,7 @@ p {
     width: 0px;
     height: 0px;
     border-style: solid;
-    border-width: 3.8vh 0 0 3.8vh;
+    border-width: 3.8svh 0 0 3.8svh;
     border-color: transparent transparent transparent #755009;
     position: absolute;
     bottom: 0%;
@@ -114,18 +114,18 @@ p {
     flex-grow: 1;
     color: white;
     position: relative;
-    font-size: 2.5vh;
+    font-size: 2.5svh;
 }
 
 .channel-fader-level {
-    margin-top: 1vh;
+    margin-top: 1svh;
 }
 
 .fader {
     appearance: none;
-    width: 26.8vh;
-    height: 1vh;
-    margin: -0.5vh -13.4vh;
+    width: 26.8svh;
+    height: 1svh;
+    margin: -0.5svh -13.4svh;
     background: black;
     transform: rotate(270deg);
 
@@ -143,9 +143,9 @@ p {
 
 .channel-mute {
     background-color: #313439;
-    height: 5.1vh;
-    line-height: 5.1vh;
-    border: 0.2vh solid #191B1A;
+    height: 5.1svh;
+    line-height: 5.1svh;
+    border: 0.2svh solid #191B1A;
     color: #B9BABC;
     position: relative;
 }
@@ -154,7 +154,7 @@ p {
     width: 0px;
     height: 0px;
     border-style: solid;
-    border-width: 0 3.8vh 3.8vh 0;
+    border-width: 0 3.8svh 3.8svh 0;
     border-color: transparent #5A0000 transparent transparent;
     position: absolute;
     right: 0%;
@@ -184,10 +184,10 @@ p {
 
 .buttons>div>div {
     background-color: #313439;
-    margin: 0.3vh;
-    height: 7.8vh;
-    line-height: 7.8vh;
-    border: 0.2vh solid #191B1A;
+    margin: 0.3svh;
+    height: 7.8svh;
+    line-height: 7.8svh;
+    border: 0.2svh solid #191B1A;
     color: #B9BABC;
     text-align: center;
 }
