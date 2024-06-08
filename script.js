@@ -51,13 +51,26 @@ function loadLayer(layerNum) {
 
     for (let i = 0; i < layers[layerNum][1].length && i < maxLayers; i++) {
         let newChannel = blankChannel.cloneNode(true);
-        newChannel.id = "channel_" + i;
+        let id = layers[layerNum][1][i];
+        newChannel.id = "channel_" + id;
 
-        // setting user-defined label
-        newChannel.getElementsByClassName("channel-label-var")[0].innerHTML = "<p>" + allChannels[layers[layerNum][1][i]].label + "</p>";
+        // displaying user-defined label
+        newChannel.getElementsByClassName("channel-label-var")[0].innerHTML = "<p>" + allChannels[id].label + "</p>";
+
+        // displaying solo
+        if (allChannels[id].solo) {
+            newChannel.getElementsByClassName("channel-solo")[0].style.borderColor = "#FDCF00";
+            newChannel.getElementsByClassName("channel-solo-triangle")[0].style.borderColor = "transparent transparent transparent #FDCF00";
+        }
         
-        // setting constant label
-        newChannel.getElementsByClassName("channel-label-const")[0].innerHTML = "<p>" + CHANNELLABELS[layers[layerNum][1][i]] + "</p>";
+        // displaying constant label
+        newChannel.getElementsByClassName("channel-label-const")[0].innerHTML = "<p>" + CHANNELLABELS[id] + "</p>";
+
+        // displaying mute
+        if (allChannels[id].mute) {
+            newChannel.getElementsByClassName("channel-mute")[0].style.borderColor = "#F81F10";
+            newChannel.getElementsByClassName("channel-mute-triangle")[0].style.borderColor = "transparent #F81F10 transparent transparent";
+        }
 
         channelsPanel.appendChild(newChannel);
     }
@@ -72,20 +85,20 @@ function loadLayer(layerNum) {
     }
 }
 
-function toggleMute() {
-    channelIndex = this.parentNode.id.substring(8);
-    let mute = !allChannels[channelIndex].mute
-    allChannels[channelIndex].mute = mute;
-    this.style.borderColor = mute ? "#F81F10" : "#191B1A";
-    this.getElementsByClassName("channel-mute-triangle")[0].style.borderColor = "transparent " + (mute ? "#F81F10" : "#5A0000") + " transparent transparent";
-}
-
 function toggleSolo() {
     channelIndex = this.parentNode.id.substring(8);
     let solo = !allChannels[channelIndex].solo
     allChannels[channelIndex].solo = solo;
     this.style.borderColor = solo ? "#FDCF00" : "#191B1A";
     this.getElementsByClassName("channel-solo-triangle")[0].style.borderColor = "transparent transparent transparent " + (solo ? "#FDCF00" : "#755009");
+}
+
+function toggleMute() {
+    channelIndex = this.parentNode.id.substring(8);
+    let mute = !allChannels[channelIndex].mute
+    allChannels[channelIndex].mute = mute;
+    this.style.borderColor = mute ? "#F81F10" : "#191B1A";
+    this.getElementsByClassName("channel-mute-triangle")[0].style.borderColor = "transparent " + (mute ? "#F81F10" : "#5A0000") + " transparent transparent";
 }
 
 function layerPressed() {
