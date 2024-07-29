@@ -4,8 +4,6 @@
     <title>Online Mixer</title>
     <link rel="stylesheet", href="styles.css">
     <link rel="icon" type="image/x-icon" href="./images/logo.ico">
-
-    <script src="./script.js"></script>
     
     <meta name="keywords" content="HTML, CSS, JavaScript">
     <meta name="description" content="Practise tool for mixing software and techniques">
@@ -13,12 +11,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body onload="onLoad()">
+<body>
     <div class="banner">
         <img src="./images/logo.png" alt="logo">
-        <div>
+        <div class="heading">
             <h1>Mixer View</h1>
             <h2>LR Mix</h2>
+        </div>
+        
+        <button class="play-button">Play</button>
+        <button class="pause-button">Pause</button>
+        <button class="stop-button">Stop</button>
+
+        <div class = player>
+            <input class="player-bar" type="range" min="0" max="1" step="0.1" value="0">
+            <p class="player-time">0:00</p>
         </div>
     </div>
 
@@ -73,5 +80,7 @@
             <div class="buttons-layer" onclick="layerPressed.call(this)"><p>Layer</p></div>
         </div>
     </div>
+
+    <script src="./script.js"></script>
 </body>
 </html>

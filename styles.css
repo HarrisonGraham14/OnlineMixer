@@ -27,13 +27,13 @@ p {
     padding-right: 0.8svw;
 }
 
-.banner>div>h1 {
+.banner>.heading>h1 {
     margin: 0px;
     color: white;
     font-size: 2.5svh;
 }
 
-.banner>div>h2 {
+.banner>.heading>h2 {
     margin: 0px;
     color: #B9BABC;
     font-size: 1.5svh;
@@ -173,17 +173,18 @@ p {
 
 .fader::-webkit-slider-thumb { /* all but firefox */
     -webkit-appearance: none;
-    appearance: none;
+    border: 1px solid #000000;
+    height: 6svh;
     width: 11svh;
-    height: 500%;
     background: #B9BABC;
     cursor: pointer;
+    margin: 0px;
 }
  .fader::-moz-range-thumb { /* firefox */
     width: 11svh;
     height: 600%;
     background: #B9BABC;
-    cursor: pointer; 
+    cursor: pointer;  
 } 
 
 .channel-label-const {
