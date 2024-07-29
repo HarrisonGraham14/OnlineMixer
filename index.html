@@ -37,9 +37,10 @@
             <div class="channel-gate channel-green"><p>GATE</p></div>
             <div class="channel-dyn channel-green"><p>DYN</p></div>
             <div class="channel-eq channel-green"><p>EQ</p></div>
-            <div class="channel-pan channel-green">
+            <button class="channel-pan channel-green" onclick="pressPan.call(this)">
                 <div class="channel-pan-bar"></div>
-            </div>
+                <div class="channel-pan-fill"></div>
+            </button>
             <div class="channel-label"><p class="channel-label-var">CH 01</p></div>
             <div class="channel-solo" onclick="toggleSolo.call(this)">
                 <p>SOLO</p>
@@ -81,6 +82,16 @@
         <div class="buttons-right">
             <div class="buttons-layer" onclick="layerPressed.call(this)"><p>Layer</p></div>
         </div>
+    </div>
+
+    <div class="pan-overlay">
+        <button class="pan-overlay-button" onclick="this.parentNode.style.display = 'none'"></button>
+        <div class="pan-overlay-panel">
+            <p class="pan-readout">Pan: 0</p>
+            <hr>
+            <input class="pan-slider" type="range" min="-100" max="100" step="2" value="0" oninput="inputPan.call(this)">
+        </div>
+        <button class="pan-overlay-button" onclick="this.parentNode.style.display = 'none'""></button>
     </div>
 
     <script src="./script.js"></script>

@@ -6,6 +6,7 @@ const audioContext = new AudioContext();
 let audios = [];
 let sources = [];
 let gains = [];
+let pans = [];
 
 const playButton = document.querySelector(".play-button");
 const pauseButton = document.querySelector(".pause-button");
@@ -17,9 +18,11 @@ for (let i = 0; i < 16; i++) {
     audios.push(new Audio());
     sources.push(audioContext.createMediaElementSource(audios[i]));
     gains.push(new GainNode(audioContext));
+    pans.push(new StereoPannerNode(audioContext));
 
     sources[i].connect(gains[i]);
-    gains[i].connect(audioContext.destination);
+    gains[i].connect(pans[i]);
+    pans[i].connect(audioContext.destination);
 }
 
 function loadAudio(folder, trackCount) {
@@ -137,6 +140,11 @@ function loadLayer(layerNum) {
         // displaying user-definpushed label
         newChannel.getElementsByClassName("channel-label-var")[0].innerHTML = "<p>" + allChannels[id].label + "</p>";
 
+        // displaying pan
+        let fill = newChannel.getElementsByClassName("channel-pan-fill")[0];
+        fill.style.width = Math.abs(Number(allChannels[id].pan) / 2.1) + "%";
+        fill.style.left = allChannels[id].pan < 0 ? (50 - Math.abs(Number(allChannels[id].pan) / 2.1)) + "%" : "50%";
+
         // displaying solo
         if (allChannels[id].solo) {
             newChannel.getElementsByClassName("channel-solo")[0].style.borderColor = "#FDCF00";
@@ -183,12 +191,32 @@ function toggleSolo() {
     this.getElementsByClassName("channel-solo-triangle")[0].style.borderColor = "transparent transparent transparent " + (solo ? "#FDCF00" : "#755009");
 }
 
+const panOverlay = document.querySelector(".pan-overlay")
+const panSlider = document.querySelector(".pan-slider")
+const panReadout = document.querySelector(".pan-readout");
+let panCurrent = 0;
+function pressPan() {
+    panCurrent = this.parentNode.id.substring(8);
+    panOverlay.style.display = "block";
+    panSlider.value = allChannels[panCurrent].pan;
+}
+
+function inputPan(slider) {
+    panReadout.innerHTML = "Pan: " + this.value;
+    allChannels[panCurrent].pan = Number(this.value);
+    let fill = document.getElementById("channel_" + panCurrent).getElementsByClassName("channel-pan-fill")[0];
+    fill.style.width = Math.abs(Number(this.value) / 2.1) + "%";
+    fill.style.left = this.value < 0 ? (50 - Math.abs(Number(this.value) / 2.1)) + "%" : "50%";
+    pans[panCurrent].pan.value = this.value / 100;
+}
+
 function toggleMute() {
     let channelIndex = this.parentNode.id.substring(8);
     let mute = !allChannels[channelIndex].mute
     allChannels[channelIndex].mute = mute;
     this.style.borderColor = mute ? "#F81F10" : "#191B1A";
     this.getElementsByClassName("channel-mute-triangle")[0].style.borderColor = "transparent " + (mute ? "#F81F10" : "#5A0000") + " transparent transparent";
+    gains[channelIndex].gain.value = mute ? 0 : Math.pow(2, allChannels[channelIndex].volume/6);
 }
 
 function faderReadout(volume) {
@@ -207,6 +235,8 @@ function updateFader() {
 
     if (channelIndex < 16) {
         gains[channelIndex].gain.value = Math.pow(2, volume/6);
+        if (allChannels[channelIndex].mute) gains[channelIndex].gain.value = 0;
+        pans[channelIndex].pan.value = allChannels[channelIndex].pan / 100;
     }
 
     allChannels[channelIndex].volume = volume;

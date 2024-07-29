@@ -123,6 +123,15 @@ p {
     left: 50%;
 }
 
+.channel-pan-fill {
+    background-color: #10E5EB;
+    height: 70%;
+    position: relative;
+    width: 0%;
+    left: 50%;
+    top: -85%;
+}
+
 .channel-label {
     background-color: white;
     height: 6.1svh;
@@ -284,3 +293,63 @@ p {
     color: #B9BABC;
     text-align: center;
 }
+
+.pan-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    display: none;
+}
+
+.pan-overlay-button{
+    width: 100%;
+    height: 40%;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.pan-overlay-panel {
+    width: 99%;
+    height: 20%;
+    margin-left: 0.5%;
+    background-color: #313439;
+}
+
+.pan-readout {
+    color: #10E5EB;
+    font-size: 3.5svh;
+    padding: 1svh;
+    padding-left: 2svh;
+}
+
+.pan-overlay-panel>hr {
+    border-color: #10E5EB;
+    border-style: solid;
+}
+
+.pan-slider {
+    appearance: none;
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 1.8%;
+    height: 1svh;
+    background: black;
+}
+
+.pan-slider::-webkit-slider-thumb { /* all but firefox */
+    -webkit-appearance: none;
+    border: 1px solid #000000;
+    height: 6svh;
+    width: 11svh;
+    background: #B9BABC;
+    cursor: pointer;
+    margin: 0px;
+}
+ .pan-slider::-moz-range-thumb { /* firefox */
+    width: 11svh;
+    height: 600%;
+    background: #B9BABC;
+    cursor: pointer;  
+} 
