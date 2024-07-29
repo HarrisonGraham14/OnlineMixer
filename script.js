@@ -25,9 +25,10 @@ for (let i = 0; i < 16; i++) {
 function loadAudio(folder, trackCount) {
     unloadedTracks = trackCount;
     for (let i = 0; i < trackCount; i++) {
-        let trackPath = folder + "/Track " + (i < 9 ? "0" : "") + (i + 1) + ".wav";
+        let trackPath = folder + "/Track " + (i < 9 ? "0" : "") + (i + 1) + ".ogg";
         audios[i].src = trackPath;
         allChannels[i].volume = 0;
+        audios[i].load
     }
     loadLayer(0);
 }
@@ -58,7 +59,6 @@ pauseButton.addEventListener("click", () => pause());
 stopButton.addEventListener("click", () => stop());
 
 playerBar.addEventListener("input", (event) => {
-    audioContext.suspend();
     for (let i in audios) {
         audios[i].currentTime = playerBar.value;
     }
