@@ -21,22 +21,61 @@ p {
     height: 7.6%;
 }
 
-.banner>img {
+.banner-left {
+    display: flex;
+    align-items: center;
+    width: 30%;
+}
+
+.banner-left>img {
     height: 6svh;
     padding-left: 0.8svw;
     padding-right: 0.8svw;
 }
 
-.banner>.heading>h1 {
+.heading {
+    margin-right: 0.8svw;
+}
+
+.heading>h1 {
     margin: 0px;
     color: white;
     font-size: 2.5svh;
 }
 
-.banner>.heading>h2 {
+.heading>h2 {
     margin: 0px;
     color: #B9BABC;
     font-size: 1.5svh;
+}
+
+.player {
+    text-align: center;
+    width: 40%;
+}
+
+.player-button {
+    background-color: transparent;
+    border-color: transparent;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+.player-button>img {
+    height: 3svh;
+}
+
+.player-bar {
+    height: 0.5svh;
+    width: 80%;
+    outline-width: 0px;
+    background-color: #002D2A;
+    accent-color: #10E5EB;
+}
+
+.player-time {
+    color: white;
+    display: inline;
 }
 
 .channels {

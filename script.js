@@ -205,7 +205,9 @@ function updateFader() {
     if (volume < -50) volume = volume * 2 + 50;
     if (volume <= -90) volume = -Infinity;
 
-    gains[channelIndex].gain.value = Math.pow(2, volume/6);
+    if (channelIndex < 16) {
+        gains[channelIndex].gain.value = Math.pow(2, volume/6);
+    }
 
     allChannels[channelIndex].volume = volume;
     this.parentNode.getElementsByClassName("channel-fader-level")[0].innerHTML = faderReadout(volume);
@@ -215,6 +217,12 @@ function layerPressed() {
     layerIndex = this.id.substring(6);
     loadLayer(layerIndex);
 }
+
+
+
+//==================================================================================================================================================================================================================================================================
+//                                                                                                                              VIEWS
+//==================================================================================================================================================================================================================================================================
 
 
 
