@@ -54,7 +54,6 @@ function loadAudio(folder, trackCount) {
     for (let i = 0; i < trackCount; i++) {
         let trackPath = folder + "/Track " + (i < 9 ? "0" : "") + (i + 1) + ".ogg";
         audios[i].src = trackPath;
-        allChannels[i].volume = 0;
         audios[i].load
     }
     loadLayer(0);
@@ -113,6 +112,8 @@ setInterval(updatePlayerTime, 100);
 
 class Channel {
     label;
+    backgroundColor = "#ffffff";
+    fontColor = "#000000";
     mute = false;
     solo = false;
     volume = -Infinity;
@@ -121,6 +122,9 @@ class Channel {
         this.label = CHANNELLABELS[index];
     }
 }
+
+const CHANNELCOLORS = ["#000000", "#fe0000", "#00ff01", "#ffff00", "#1f70ff", "#ff00fe", "#00ffff", "#ffffff", "#000000", "#000000", "#000000", "#000000", "#000000", "#000000", "#000000", "#000000"]
+const CHANNELCOLORSFONT = ["#ffffff", "#000000", "#000000", "#000000", "#000000", "#000000", "#000000", "#000000", "#ffffff", "#fe0000", "#00ff01", "#ffff00", "#1f70ff", "#ff00fe", "#00ffff", "#ffffff"]
 
 const CHANNELLABELS = ["CH 01", "CH 02", "CH 03", "CH 04", "CH 05", "CH 06", "CH 07", "CH 08", "CH 09", "CH 10", "CH 11", "CH 12", "CH 13", "CH 14", "CH 15", "CH 16", "USB", "Rtn 1", "Rtn 2", "Rtn 3", "Rtn 4", "Bus 1", "Bus 2", "Bus 3", "Bus 4", "FXSnd 1", "FXSnd 2", "FXSnd 3", "FXSnd 4", "LR", "DCA 1", "DCA 2", "DCA 3", "DCA 4"]
 let layers = [["CH 1-8", [0, 1, 2, 3, 4, 5, 6, 7]], ["CH 9-16", [8, 9, 10, 11, 12, 13, 14, 15]], ["Aux / FX", [16, 17, 18, 19, 20]], ["Bus", [21, 22, 23, 24]], ["FXSnd / Main", [25, 26, 27, 28, 29]], ["DCA", [30, 31,32, 33]]];
@@ -162,8 +166,10 @@ function loadLayer(layerNum) {
         newChannel.style.width = (98.4 / maxChannels) + "%";
         newChannel.getElementsByClassName("fader")[0].style.height = (8 / maxChannels) + "svh ";
 
-        // displaying user-definpushed label
-        newChannel.getElementsByClassName("channel-label-var")[0].innerHTML = "<p>" + allChannels[id].label + "</p>";
+        // displaying user-defined label
+        newChannel.getElementsByClassName("channel-label-var")[0].innerHTML = allChannels[id].label;
+        newChannel.getElementsByClassName("channel-label-var")[0].style.color = allChannels[id].fontColor;
+        newChannel.getElementsByClassName("channel-label-var")[0].parentNode.style.backgroundColor = allChannels[id].backgroundColor;
 
         // displaying pan
         let fill = newChannel.getElementsByClassName("channel-pan-fill")[0];
@@ -216,25 +222,6 @@ function toggleSolo() {
     this.getElementsByClassName("channel-solo-triangle")[0].style.borderColor = "transparent transparent transparent " + (solo ? "#FDCF00" : "#755009");
 }
 
-const panOverlay = document.querySelector(".pan-overlay")
-const panSlider = document.querySelector(".pan-slider")
-const panReadout = document.querySelector(".pan-readout");
-let panCurrent = 0;
-function pressPan() {
-    panCurrent = this.parentNode.id.substring(8);
-    panOverlay.style.display = "block";
-    panSlider.value = allChannels[panCurrent].pan;
-}
-
-function inputPan(slider) {
-    panReadout.innerHTML = "Pan: " + this.value;
-    allChannels[panCurrent].pan = Number(this.value);
-    let fill = document.getElementById("channel_" + panCurrent).getElementsByClassName("channel-pan-fill")[0];
-    fill.style.width = Math.abs(Number(this.value) / 2.1) + "%";
-    fill.style.left = this.value < 0 ? (50 - Math.abs(Number(this.value) / 2.1)) + "%" : "50%";
-    pans[panCurrent].pan.value = this.value / 100;
-}
-
 function toggleMute() {
     let channelIndex = this.parentNode.id.substring(8);
     let mute = !allChannels[channelIndex].mute
@@ -250,7 +237,7 @@ function faderReadout(volume) {
 }
 
 function updateFader() {
-    channelIndex = this.parentNode.parentNode.id.substring(8);
+    let channelIndex = this.parentNode.parentNode.id.substring(8);
 
     let volume = this.value;
     if (volume < -10) volume = volume * 2 + 10;
@@ -265,7 +252,8 @@ function updateFader() {
     }
 
     allChannels[channelIndex].volume = volume;
-    this.parentNode.getElementsByClassName("channel-fader-level")[0].innerHTML = faderReadout(volume);
+    let channel = document.getElementById("channel_" + channelIndex);
+    if (channel) channel.getElementsByClassName("channel-fader-level")[0].innerHTML = faderReadout(volume);
 }
 
 function layerPressed() {
@@ -273,13 +261,118 @@ function layerPressed() {
     loadLayer(layerIndex);
 }
 
+//==================================================================================================================================================================================================================================================================
+//                                                                                                                              SCENES
+//==================================================================================================================================================================================================================================================================
+
+class Scene {
+    folder = "";
+    trackCount = 0;
+    trackNames = [];
+    trackColors = [];
+    trackVolumes = [];
+    trackPans = [];
+
+    constructor(folder, trackCount) {
+        this.folder = folder;
+        this.trackCount = trackCount;
+
+        this.trackNames = CHANNELLABELS.slice(0, 16);
+        this.trackColors = Array(trackCount).fill(7).concat(Array(16 - trackCount).fill(0));
+        this.trackVolumes = Array(trackCount).fill(-12).concat(Array(16 - trackCount).fill(-Infinity));
+        this.trackPans = Array(16).fill(0);
+    }
+
+    addNames(trackNames) {
+        this.trackNames = trackNames.concat(this.trackNames.slice(trackNames.length, 16));
+    }
+
+    addColors(trackColors) {
+        this.trackColors = trackColors.concat(this.trackColors.slice(trackColors.length, 16));
+    }
+
+    addVolumes(trackVolumes) {
+        this.trackVolumes = trackVolumes.concat(this.trackVolumes.slice(trackVolumes.length, 16));
+    }
+
+    addPans(trackPans) {
+        this.trackPans = trackPans.concat(this.trackPans.slice(trackPans.length, 16));
+    }
+
+    load() {
+        loadAudio(this.folder, this.trackCount);
+        for (let i = 0; i < 16; i++) {
+            allChannels[i].volume = this.trackVolumes[i];
+            gains[i].gain.value = Math.pow(2, this.trackVolumes[i]/6);
+            pans[i].pan.value = this.trackPans[i];
+            allChannels[i].label = this.trackNames[i];
+            allChannels[i].backgroundColor = CHANNELCOLORS[this.trackColors[i]];
+            allChannels[i].fontColor = CHANNELCOLORSFONT[this.trackColors[i]];
+        }
+        loadLayer(0);
+    }
+}
+
+const testScene = new Scene("./audio", 7);
+testScene.addNames(["Vox Lead", "Vox Back", "Guit Aco", "Guit Elec", "Bass", "Drum L", "Drum R"]);
+testScene.addColors([3, 3, 2, 6, 5, 4, 4]);
+testScene.load();
+
 
 
 //==================================================================================================================================================================================================================================================================
 //                                                                                                                              VIEWS
 //==================================================================================================================================================================================================================================================================
 
+const panOverlay = document.querySelector(".pan-overlay")
+const panSlider = document.querySelector(".pan-slider")
+const panReadout = document.querySelector(".pan-readout");
+let panCurrent = 0;
+function pressPan() {
+    panCurrent = this.parentNode.id.substring(8);
+    panOverlay.style.display = "block";
+    panSlider.value = allChannels[panCurrent].pan;
+    panReadout.innerHTML = "Pan: " + allChannels[panCurrent].pan;
+}
 
+function inputPan(slider) {
+    panReadout.innerHTML = "Pan: " + this.value;
+    allChannels[panCurrent].pan = Number(this.value);
+    let fill = document.getElementById("channel_" + panCurrent).getElementsByClassName("channel-pan-fill")[0];
+    fill.style.width = Math.abs(Number(this.value) / 2.1) + "%";
+    fill.style.left = this.value < 0 ? (50 - Math.abs(Number(this.value) / 2.1)) + "%" : "50%";
+    pans[panCurrent].pan.value = this.value / 100;
+}
 
+let channelView = 0;
+function openView(view, channel) {
+    channelView = channel;
 
-loadAudio("./audio", 7);
+    let viewPanel = document.getElementsByClassName(view)[0];
+    if (!viewPanel) return;
+
+    viewPanel.style.display = "block";
+
+    document.getElementsByClassName("heading-upper")[0].innerHTML = allChannels[channelView].label;
+
+    let lowerHeading = "";
+    if (view == "overview-view") lowerHeading = "Overview";
+    else if (view == "gate-view") lowerHeading = "Gate";
+    else if (view == "eq-view") lowerHeading = "EQ";
+    else if (view == "dynamic-view") lowerHeading = "Dynamic";
+    else if (view == "sends-view") lowerHeading = "Sends";
+    document.getElementsByClassName("heading-lower")[0].innerHTML = lowerHeading;
+}
+
+function closeView(self) {
+    self.parentNode.style.display = "none";
+    
+    console.log(document.getElementsByClassName("overview-view")[0].style.display);
+    
+    if (document.getElementsByClassName("overview-view")[0].style.display == "block") document.getElementsByClassName("heading-lower")[0].innerHTML = "Overview";
+
+    else {
+        document.getElementsByClassName("heading-upper")[0].innerHTML = "Mixer View";
+        document.getElementsByClassName("heading-lower")[0].innerHTML = "LR Mix";
+    }
+}

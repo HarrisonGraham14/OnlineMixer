@@ -31,7 +31,7 @@ p {
 
 .banner-left>img {
     height: 6svh;
-    padding-left: 0.8svw;
+    padding-left: 1.3svw;
     padding-right: 0.8svw;
 }
 
@@ -39,13 +39,13 @@ p {
     margin-right: 0.8svw;
 }
 
-.heading>h1 {
+.heading-upper {
     margin: 0px;
     color: white;
     font-size: 2.5svh;
 }
 
-.heading>h2 {
+.heading-lower {
     margin: 0px;
     color: #B9BABC;
     font-size: 1.5svh;
@@ -101,11 +101,11 @@ p {
 
 .channel-green {
     background-color: #002D2A;
-    height: 4.5svh;
-    line-height: 4.5svh;
+    height: 5.5svh;
     margin-top: 0.4svh;
     border: 0.4svh solid #176363;
     color: #176363;
+    font-size: 2.5svh;
 }
 
 .channel-blank {
@@ -241,7 +241,7 @@ p {
     position: absolute;
     width: 8%;
     height: 98%;
-    background-color: green;
+    background-color: rgb(117, 214, 117);
     top: 1%;
     left: 84%;
 }
@@ -249,7 +249,7 @@ p {
 .peak-meter-bar {
     width: 100%;
     height: 100%;
-    background-color: #B9BABC;
+    background-color: #515151;
 }
 
 .channel-label-const {
@@ -331,18 +331,18 @@ p {
     width: 99%;
     height: 20%;
     margin-left: 0.5%;
-    background-color: #313439;
+    background-color: #282828;
 }
 
 .pan-readout {
-    color: #10E5EB;
+    color: #40B1DB;
     font-size: 3.5svh;
     padding: 1svh;
     padding-left: 2svh;
 }
 
 .pan-overlay-panel>hr {
-    border-color: #10E5EB;
+    border-color: #40B1DB;
     border-style: solid;
 }
 
@@ -350,7 +350,7 @@ p {
     appearance: none;
     width: 90%;
     margin-left: 5%;
-    margin-top: 1.8%;
+    margin-top: 5svh;
     height: 1svh;
     background: black;
 }
@@ -370,3 +370,24 @@ p {
     background: #B9BABC;
     cursor: pointer;  
 } 
+
+.alt-view {
+    position: absolute;
+    width: 100%;
+    height: 92.4%;
+    background-color: #083D41;
+    display: none;
+}
+
+.back-button {
+    position: absolute;
+    top: -7.6svh;
+    background-color: transparent;
+    width: 15%;
+    height: 7.6svh;
+    border: none;
+    font-size: 2.5svh;
+    text-align: left;
+    color: white;
+    padding-left: 0.3svw;
+}
