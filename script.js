@@ -7,6 +7,10 @@ let audios = [];
 let sources = [];
 let gains = [];
 let gainAnalysers = [];
+let gates = [];
+let eqs = [];
+let compressors = [];
+let volumes = [];
 let pans = [];
 
 const playButton = document.querySelector(".play-button");
@@ -25,10 +29,10 @@ function updateAnalyser(index) {
     // Compute peak instantaneous power over the interval.
     let peakInstantaneousPower = 0;
     for (let i = 0; i < sampleBuffer.length; i++) {
-      const power = sampleBuffer[i] ** 2;
+      const power = Math.abs(sampleBuffer[i]);
       peakInstantaneousPower = Math.max(power, peakInstantaneousPower);
     }
-    const peakInstantaneousPowerDecibels = 10 * Math.log10(peakInstantaneousPower);
+    const peakInstantaneousPowerDecibels = 20 * Math.log10(peakInstantaneousPower);
 
     channel.getElementsByClassName("peak-meter-bar")[0].style.height = Math.min(100, -peakInstantaneousPowerDecibels) + "%";
 }
@@ -38,11 +42,13 @@ for (let i = 0; i < 16; i++) {
     sources.push(audioContext.createMediaElementSource(audios[i]));
     gains.push(new GainNode(audioContext));
     gainAnalysers.push(new AnalyserNode(audioContext));
+    volumes.push(new GainNode(audioContext));
     pans.push(new StereoPannerNode(audioContext));
 
     sources[i].connect(gains[i]);
     gains[i].connect(gainAnalysers[i]);
-    gains[i].connect(pans[i]);
+    gains[i].connect(volumes[i]);
+    volumes[i].connect(pans[i]);
     pans[i].connect(audioContext.destination);
 
     gainAnalysers[0].fftSize = sampleBuffer.length;
@@ -228,7 +234,7 @@ function toggleMute() {
     allChannels[channelIndex].mute = mute;
     this.style.borderColor = mute ? "#F81F10" : "#191B1A";
     this.getElementsByClassName("channel-mute-triangle")[0].style.borderColor = "transparent " + (mute ? "#F81F10" : "#5A0000") + " transparent transparent";
-    gains[channelIndex].gain.value = mute ? 0 : Math.pow(2, allChannels[channelIndex].volume/6);
+    volumes[channelIndex].gain.value = mute ? 0 : Math.pow(2, allChannels[channelIndex].volume/6);
 }
 
 function faderReadout(volume) {
@@ -246,8 +252,8 @@ function updateFader() {
     if (volume <= -90) volume = -Infinity;
 
     if (channelIndex < 16) {
-        gains[channelIndex].gain.value = Math.pow(2, volume/6);
-        if (allChannels[channelIndex].mute) gains[channelIndex].gain.value = 0;
+        volumes[channelIndex].gain.value = Math.pow(2, volume/6);
+        if (allChannels[channelIndex].mute) volumes[channelIndex].gain.value = 0;
         pans[channelIndex].pan.value = allChannels[channelIndex].pan / 100;
     }
 
@@ -303,7 +309,7 @@ class Scene {
         loadAudio(this.folder, this.trackCount);
         for (let i = 0; i < 16; i++) {
             allChannels[i].volume = this.trackVolumes[i];
-            gains[i].gain.value = Math.pow(2, this.trackVolumes[i]/6);
+            volumes[i].gain.value = Math.pow(2, this.trackVolumes[i]/6);
             allChannels[i].pan = this.trackPans[i];
             pans[i].pan.value = this.trackPans[i]/100;
             allChannels[i].label = this.trackNames[i];
