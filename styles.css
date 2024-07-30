@@ -237,6 +237,21 @@ p {
     cursor: pointer;  
 } 
 
+.peak-meter {
+    position: absolute;
+    width: 8%;
+    height: 98%;
+    background-color: green;
+    top: 1%;
+    left: 84%;
+}
+
+.peak-meter-bar {
+    width: 100%;
+    height: 100%;
+    background-color: #B9BABC;
+}
+
 .channel-label-const {
     position: absolute;
     bottom: 0%;

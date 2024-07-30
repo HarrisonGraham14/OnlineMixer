@@ -6,6 +6,7 @@ const audioContext = new AudioContext();
 let audios = [];
 let sources = [];
 let gains = [];
+let gainAnalysers = [];
 let pans = [];
 
 const playButton = document.querySelector(".play-button");
@@ -14,15 +15,38 @@ const stopButton = document.querySelector(".stop-button");
 const playerBar = document.querySelector(".player-bar");
 const playerTime = document.querySelector(".player-time");
 
+const sampleBuffer = new Float32Array(2048);
+function updateAnalyser(index) {
+    let channel = document.getElementById("channel_" + index);
+    if (!channel) return;
+
+    gainAnalysers[index].getFloatTimeDomainData(sampleBuffer);
+
+    // Compute peak instantaneous power over the interval.
+    let peakInstantaneousPower = 0;
+    for (let i = 0; i < sampleBuffer.length; i++) {
+      const power = sampleBuffer[i] ** 2;
+      peakInstantaneousPower = Math.max(power, peakInstantaneousPower);
+    }
+    const peakInstantaneousPowerDecibels = 10 * Math.log10(peakInstantaneousPower);
+
+    channel.getElementsByClassName("peak-meter-bar")[0].style.height = Math.min(100, -peakInstantaneousPowerDecibels) + "%";
+}
+
 for (let i = 0; i < 16; i++) {
     audios.push(new Audio());
     sources.push(audioContext.createMediaElementSource(audios[i]));
     gains.push(new GainNode(audioContext));
+    gainAnalysers.push(new AnalyserNode(audioContext));
     pans.push(new StereoPannerNode(audioContext));
 
     sources[i].connect(gains[i]);
+    gains[i].connect(gainAnalysers[i]);
     gains[i].connect(pans[i]);
     pans[i].connect(audioContext.destination);
+
+    gainAnalysers[0].fftSize = sampleBuffer.length;
+    setInterval(updateAnalyser, 50, [i]);
 }
 
 function loadAudio(folder, trackCount) {
@@ -79,7 +103,8 @@ function updatePlayerTime() {
         playerBar.max = audios[0].duration;
     }
 }
-var intervalId = setInterval(updatePlayerTime, 100);
+setInterval(updatePlayerTime, 100);
+
 
 
 //==================================================================================================================================================================================================================================================================
