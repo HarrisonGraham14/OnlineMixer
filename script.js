@@ -304,7 +304,8 @@ class Scene {
         for (let i = 0; i < 16; i++) {
             allChannels[i].volume = this.trackVolumes[i];
             gains[i].gain.value = Math.pow(2, this.trackVolumes[i]/6);
-            pans[i].pan.value = this.trackPans[i];
+            allChannels[i].pan = this.trackPans[i];
+            pans[i].pan.value = this.trackPans[i]/100;
             allChannels[i].label = this.trackNames[i];
             allChannels[i].backgroundColor = CHANNELCOLORS[this.trackColors[i]];
             allChannels[i].fontColor = CHANNELCOLORSFONT[this.trackColors[i]];
@@ -316,6 +317,8 @@ class Scene {
 const testScene = new Scene("./audio", 7);
 testScene.addNames(["Vox Lead", "Vox Back", "Guit Aco", "Guit Elec", "Bass", "Drum L", "Drum R"]);
 testScene.addColors([3, 3, 2, 6, 5, 4, 4]);
+testScene.addVolumes([-7.5, -15, -9, -9.5, -18, -7.5, -7.5]);
+testScene.addPans([0, 0, -20, 20, 0, -80, 80]);
 testScene.load();
 
 
