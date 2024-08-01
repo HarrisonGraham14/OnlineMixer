@@ -101,6 +101,16 @@ function pause() {
     playButton.getElementsByClassName("play-button-image")[0].style.animation = "none";
 }
 
+function buffer() {
+    for (let i in audios) {
+        audios[i].pause();
+    }
+    playState = "loading-play";
+    playButton.getElementsByClassName("play-button-image")[0].src = "./images/loading.png";
+    playButton.getElementsByClassName("play-button-image")[0].alt = "loading audio...";
+    playButton.getElementsByClassName("play-button-image")[0].style.animation = "spin 2s linear infinite";
+}
+
 playButton.addEventListener("click", () => {
     if (playState == "paused") play();
     else if (playState == "playing") pause();
@@ -110,16 +120,20 @@ playerBar.addEventListener("input", (event) => {
     for (let i in audios) {
         audios[i].currentTime = playerBar.value;
     }
+    buffer();
 });
 playerBar.addEventListener("change", (event) => audioContext.resume());
 
 function updatePlayerTime() {
 
     // Checks if tracks are loading
-    if (playState == "loading") {
+    if (playState == "loading" || playState == "loading-play") {
         for (let i = 1; i < 16; i++) {
             if (audios[i].readyState != 0 && audios[i].readyState != 4) break;
-            else if (i == 16 - 1) pause();
+            else if (i == 16 - 1) {
+                if (playState == "loading") pause();
+                else if (playState == "loading-play") play();
+            }
         }
     }
 
