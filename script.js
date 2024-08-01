@@ -320,12 +320,12 @@ class Scene {
     }
 }
 
-const testScene = new Scene("./audio", 7);
-testScene.addNames(["Vox Lead", "Vox Back", "Guit Aco", "Guit Elec", "Bass", "Drum L", "Drum R"]);
-testScene.addColors([3, 3, 2, 6, 5, 4, 4]);
-testScene.addVolumes([-7.5, -15, -9, -9.5, -18, -7.5, -7.5]);
-testScene.addPans([0, 0, -20, 20, 0, -80, 80]);
-testScene.load();
+const goodGoodFather = new Scene("./audio/Good Good Father", 16);
+goodGoodFather.addNames(["Vox Lead", "Vox Back 1", "Vox Back 2", "CH 04", "CH 05", "CH 06", "CH 07", "Bass", "Guit Aco", "CH 10", "Guit Elec L", "Guit Elec R", "Keys L", "Keys R", "Drums L", "Drums R"]);
+goodGoodFather.addColors([6, 2, 4, 0, 0, 0, 0, 5, 6, 0, 2, 2, 4, 4, 3, 3]);
+goodGoodFather.addVolumes([-8, -14, -14, -Infinity, -Infinity, -Infinity, -Infinity, -13.5, -13, -Infinity, -18.5, -18.5, -14, -14, -11.5, -11.5]);
+goodGoodFather.addPans([0, -20, 20, 0, 0, 0, 0, 0, -30, 0, -40, 100, -100, 100, -50, 50]);
+goodGoodFather.load();
 
 
 
