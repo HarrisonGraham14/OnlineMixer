@@ -58,13 +58,19 @@ p {
     width: 40%;
 }
 
-.player-button {
+.play-button {
     background-color: transparent;
     border-color: transparent;
 }
 
-.player-button>img {
+.play-button-image {
     height: 3svh;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .player-bar {

@@ -14,8 +14,8 @@ let volumes = [];
 let pans = [];
 
 const playButton = document.querySelector(".play-button");
-const pauseButton = document.querySelector(".pause-button");
-const stopButton = document.querySelector(".stop-button");
+//const pauseButton = document.querySelector(".pause-button");
+//const stopButton = document.querySelector(".stop-button");
 const playerBar = document.querySelector(".player-bar");
 const playerTime = document.querySelector(".player-time");
 
@@ -65,30 +65,46 @@ function loadAudio(folder, trackCount) {
     loadLayer(0);
 }
 
+let playState = "loading";
 function play() {
-    if (audioContext.state === "suspended") audioContext.resume();
+    if (audioContext.state == "suspended") audioContext.resume();
+
+    // don't allow play before tracks have loaded
     for (let i in audios) {
+        if (audios[i].readyState != 0 && audios[i].readyState != 4) {
+            playState = "loading";
+            playButton.getElementsByClassName("play-button-image")[0].src = "./images/loading.png";
+            playButton.getElementsByClassName("play-button-image")[0].alt = "loading audio...";
+            playButton.getElementsByClassName("play-button-image")[0].style.animation = "spin 2s linear infinite";
+            return;
+        }
+    }
+
+    for (let i in audios) {
+        if (audios[i].readyState == 0) continue;
         audios[i].play();
         audios[i].currentTime = audios[0].currentTime;
     }
+    playState = "playing";
+    playButton.getElementsByClassName("play-button-image")[0].src = "./images/pause.png";
+    playButton.getElementsByClassName("play-button-image")[0].alt = "pause";
+    playButton.getElementsByClassName("play-button-image")[0].style.animation = "none";
 }
 
 function pause() {
     for (let i in audios) {
         audios[i].pause();
     }
+    playState = "paused";
+    playButton.getElementsByClassName("play-button-image")[0].src = "./images/play.png";
+    playButton.getElementsByClassName("play-button-image")[0].alt = "play";
+    playButton.getElementsByClassName("play-button-image")[0].style.animation = "none";
 }
 
-function stop() {
-    for (let i in audios) {
-        audios[i].pause();
-        audios[i].currentTime = 0;
-    }
-}
-
-playButton.addEventListener("click", () => play());
-pauseButton.addEventListener("click", () => pause());
-stopButton.addEventListener("click", () => stop());
+playButton.addEventListener("click", () => {
+    if (playState == "paused") play();
+    else if (playState == "playing") pause();
+});
 
 playerBar.addEventListener("input", (event) => {
     for (let i in audios) {
@@ -98,6 +114,15 @@ playerBar.addEventListener("input", (event) => {
 playerBar.addEventListener("change", (event) => audioContext.resume());
 
 function updatePlayerTime() {
+
+    // Checks if tracks are loading
+    if (playState == "loading") {
+        for (let i = 1; i < 16; i++) {
+            if (audios[i].readyState != 0 && audios[i].readyState != 4) break;
+            else if (i == 16 - 1) pause();
+        }
+    }
+
     let currentTime = audios[0].currentTime;
     let minutes = Math.floor(currentTime / 60);
     let seconds = Math.floor(currentTime % 60);
@@ -110,7 +135,7 @@ function updatePlayerTime() {
     
     // Keeps tracks in sync
     for (let i = 1; i < 16; i++) {
-        if (Math.abs(audios[i].currentTime - audios[0].currentTime > 0.02)) audios[i].currentTime = audios[0].currentTime
+        if (Math.abs(audios[i].currentTime - audios[0].currentTime > 0.02)) audios[i].currentTime = audios[0].currentTime;
     }
 }
 setInterval(updatePlayerTime, 100);
