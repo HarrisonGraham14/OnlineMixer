@@ -103,9 +103,14 @@ function updatePlayerTime() {
     let seconds = Math.floor(currentTime % 60);
     seconds = seconds < 10 ? "0" + seconds : seconds;
     playerTime.innerHTML = minutes + ":" + seconds; 
-    if (audioContext.state != "suspended") {
-        playerBar.value = currentTime;
-        playerBar.max = audios[0].duration;
+    if (audioContext.state == "suspended") return;
+
+    playerBar.value = currentTime;
+    playerBar.max = audios[0].duration;
+    
+    // Keeps tracks in sync
+    for (let i = 1; i < 16; i++) {
+        if (Math.abs(audios[i].currentTime - audios[0].currentTime > 0.02)) audios[i].currentTime = audios[0].currentTime
     }
 }
 setInterval(updatePlayerTime, 100);
