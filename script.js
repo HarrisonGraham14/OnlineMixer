@@ -170,8 +170,17 @@ class Channel {
     solo = false;
     volume = -Infinity;
     pan = 0;
+    hasGate = true;
+    hasDyn = true;
+    hasEq = true;
     constructor(index) {
         this.label = CHANNELLABELS[index];
+
+        if (index < 16) return;
+        this.hasGate = false;
+        if ((index >= 21 && index < 25) || index == 29) return;
+        this.hasDyn = false;
+        if (index >= 21) this.hasEq = false;
     }
 }
 
@@ -218,23 +227,23 @@ function loadLayer(layerNum) {
         newChannel.getElementsByClassName("fader")[0].style.height = (8 / maxChannels) + "svh ";
 
         // only channels 1-16 have gates
-        if (id >= 16) {
+        if (!allChannels[id].hasGate) {
             newChannel.getElementsByClassName("channel-gate")[0].remove();
             newChannel.getElementsByClassName("channel-blank")[0].style.marginBottom = "5.9svh";
+        }
         
-            // of the others, only buses and LR have compressors
-            if ((id < 21 || id >= 25) && id != 29) {
-                newChannel.getElementsByClassName("channel-dyn")[0].remove();
-                newChannel.getElementsByClassName("channel-blank")[0].style.marginBottom = "11.8svh";
+        // of the others, only buses and LR have compressors
+        if (!allChannels[id].hasDyn) {
+            newChannel.getElementsByClassName("channel-dyn")[0].remove();
+            newChannel.getElementsByClassName("channel-blank")[0].style.marginBottom = "11.8svh";
+        }
 
-                // of the others, only AUX/FX panel has EQs and pans
-                if (id >= 21) {
-                    newChannel.getElementsByClassName("channel-eq")[0].remove();
-                    newChannel.getElementsByClassName("channel-pan")[0].remove();
-                    newChannel.getElementsByClassName("channel-blank")[0].style.marginBottom = "24svh";
-                }
-            }
-        } 
+        // of the others, only AUX/FX panel has EQs and pans
+        if (!allChannels[id].hasEq) {
+            newChannel.getElementsByClassName("channel-eq")[0].remove();
+            newChannel.getElementsByClassName("channel-pan")[0].remove();
+            newChannel.getElementsByClassName("channel-blank")[0].style.marginBottom = "24svh";
+        }
 
         // displaying user-defined label
         newChannel.getElementsByClassName("channel-label-var")[0].innerHTML = allChannels[id].label;
@@ -423,8 +432,10 @@ function inputPan(slider) {
 }
 
 let channelView = 0;
+let currentView;
 function openView(view, channel) {
     channelView = channel;
+    currentView = view;
     channelsPanel.innerHTML = "";
 
     let viewPanel = document.getElementsByClassName(view)[0];
@@ -443,12 +454,24 @@ function openView(view, channel) {
     document.getElementsByClassName("heading-lower")[0].innerHTML = lowerHeading;
 }
 
+function viewSwitch(direction) {
+    let offset = (direction == "next") ? 1 : 33;
+    if (currentView == "overview-view") channelView = (Number(channelView) + offset) % 34;
+    if (currentView == "gate-view") do channelView = (Number(channelView) + offset) % 34; while (!allChannels[channelView].hasGate);
+    if (currentView == "dynamic-view") do channelView = (Number(channelView) + offset) % 34; while (!allChannels[channelView].hasDyn);
+    if (currentView == "eq-view" || currentView == "sends-view") do channelView = (Number(channelView) + offset) % 34; while (!allChannels[channelView].hasEq);
+    openView(currentView, channelView);
+}
+
 function closeView(self) {
     self.parentNode.style.display = "none";
     
     console.log(document.getElementsByClassName("overview-view")[0].style.display);
     
-    if (document.getElementsByClassName("overview-view")[0].style.display == "flex") document.getElementsByClassName("heading-lower")[0].innerHTML = "Overview";
+    if (document.getElementsByClassName("overview-view")[0].style.display == "flex") {
+        document.getElementsByClassName("heading-lower")[0].innerHTML = "Overview";
+        openView("overview-view", currentLayer);
+    }
 
     else {
         document.getElementsByClassName("heading-upper")[0].innerHTML = "Mixer View";

@@ -387,17 +387,30 @@ p {
     display: none;
 }
 
-.back-button {
+.view-header-button {
     position: absolute;
     top: -7.6svh;
     background-color: transparent;
-    width: 15%;
+    width: 4svw;
     height: 7.6svh;
     border: none;
+    font-size: 4svh;
+    color: white;
+}
+
+.back-button {
+    width: 15%;
     font-size: 2.5svh;
     text-align: left;
-    color: white;
     padding-left: 0.3svw;
+}
+
+.prev-button {
+    right: 6svw;
+}
+
+.next-button {
+    right: 1svw;
 }
 
 .overview-channel {
