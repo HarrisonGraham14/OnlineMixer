@@ -60,7 +60,8 @@ function loadAudio(folder, trackCount) {
     for (let i = 0; i < trackCount; i++) {
         let trackPath = folder + "/Track " + (i < 9 ? "0" : "") + (i + 1) + ".ogg";
         audios[i].src = trackPath;
-        audios[i].load
+        audios[i].load;
+        audios[i].loop = true;
     }
     loadLayer(0);
 }
@@ -102,10 +103,13 @@ function pause() {
 }
 
 function buffer() {
+    if (playState == "playing") playState = "loading-play";
+    else playState = "loading";
+
     for (let i in audios) {
         audios[i].pause();
     }
-    playState = "loading-play";
+
     playButton.getElementsByClassName("play-button-image")[0].src = "./images/loading.png";
     playButton.getElementsByClassName("play-button-image")[0].alt = "loading audio...";
     playButton.getElementsByClassName("play-button-image")[0].style.animation = "spin 2s linear infinite";
@@ -191,9 +195,6 @@ let blankChannel = document.getElementsByClassName("channel")[0].cloneNode(true)
 let layersPanel = document.getElementsByClassName("buttons-right")[0];
 let blankLayer = document.getElementsByClassName("buttons-layer")[0].cloneNode(true);
 
-refreshLayers();
-loadLayer(0);
-
 function refreshLayers() {
     layersPanel.innerHTML = "";
     for (let i in layers) {
@@ -204,8 +205,10 @@ function refreshLayers() {
     }
 }
 
+let currentLayer = "0";
 function loadLayer(layerNum) {
     channelsPanel.innerHTML = "";
+    currentLayer = layerNum;
     
     for (let i = 0; i < layers[layerNum][1].length && i < maxChannels; i++) {
         let newChannel = blankChannel.cloneNode(true);
@@ -311,6 +314,9 @@ function layerPressed() {
     loadLayer(layerIndex);
 }
 
+refreshLayers();
+loadLayer(0);
+
 //==================================================================================================================================================================================================================================================================
 //                                                                                                                              SCENES
 //==================================================================================================================================================================================================================================================================
@@ -400,11 +406,12 @@ function inputPan(slider) {
 let channelView = 0;
 function openView(view, channel) {
     channelView = channel;
+    channelsPanel.innerHTML = "";
 
     let viewPanel = document.getElementsByClassName(view)[0];
     if (!viewPanel) return;
 
-    viewPanel.style.display = "block";
+    viewPanel.style.display = "flex";
 
     document.getElementsByClassName("heading-upper")[0].innerHTML = allChannels[channelView].label;
 
@@ -422,10 +429,11 @@ function closeView(self) {
     
     console.log(document.getElementsByClassName("overview-view")[0].style.display);
     
-    if (document.getElementsByClassName("overview-view")[0].style.display == "block") document.getElementsByClassName("heading-lower")[0].innerHTML = "Overview";
+    if (document.getElementsByClassName("overview-view")[0].style.display == "flex") document.getElementsByClassName("heading-lower")[0].innerHTML = "Overview";
 
     else {
         document.getElementsByClassName("heading-upper")[0].innerHTML = "Mixer View";
         document.getElementsByClassName("heading-lower")[0].innerHTML = "LR Mix";
+        loadLayer(currentLayer);
     }
 }

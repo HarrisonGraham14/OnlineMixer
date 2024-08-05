@@ -143,8 +143,9 @@ p {
 .channel-label {
     background-color: white;
     height: 6.1svh;
-    line-height: 6.1svh;
     margin: 0.4svh;
+    font-size: 2.5svh;
+    border-style: none;
 }
 
 .channel-solo {
@@ -396,4 +397,58 @@ p {
     text-align: left;
     color: white;
     padding-left: 0.3svw;
+}
+
+.overview-channel {
+    width: 7%;
+    margin-left: 0.2%;
+    font-size: 2.2svh;
+}
+
+.overview-fader {
+    width: 60svh;
+    margin: -0.5svh -30svh;
+}
+
+.overview-fader-groove {
+    height: 49svh;
+    margin: -24.6svh -0.5svh;
+}
+
+.overview-channel-ticks {
+    background: repeating-linear-gradient(to bottom, #B9BABC, #B9BABC 1px, transparent 2px, transparent 6.125svh);
+    height: 49svh;
+    margin: -24.6svh -25%;
+}
+
+.overview-major-tick {
+    background: linear-gradient(to bottom, transparent calc(12.25svh - 2px), white calc(12.25svh - 2px), white calc(12.25svh + 3px), transparent calc(12.25svh + 3px));
+}
+
+.overview-fader-tick-labels {
+    height: 45.2svh;
+    margin: -25.8svh 30%;
+}
+
+.overview-panel {
+    margin-right: 0.2%;
+    width: 7%;
+    height: 100%;
+    background-color: #002D2A;
+}
+
+.overview-gate {
+    width: 15%;
+}
+
+.overview-eq {
+    flex-grow: 1;
+}
+
+.overview-dyn {
+    width: 15%;
+}
+
+.overview-sends {
+    width: 15%;
 }

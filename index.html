@@ -38,7 +38,7 @@
                 <div class="channel-pan-bar"></div>
                 <div class="channel-pan-fill"></div>
             </button>
-            <div class="channel-label"><p class="channel-label-var">CH 01</p></div>
+            <button class="channel-label" onclick="openView('overview-view', this.parentNode.id.substring(8))"><p class="channel-label-var">CH 01</p></button>
             <div class="channel-solo" onclick="toggleSolo.call(this)">
                 <p>SOLO</p>
                 <div class="channel-solo-triangle"></div>
@@ -96,6 +96,66 @@
 
     <div class="overview-view alt-view">
         <button class="back-button" onclick="closeView(this)">&#9001;</button>
+
+        <div class="channel overview-channel" id="channel_overview">
+            <button class="channel-label"><p class="channel-label-var">CH 01</p></button>
+            <button class="channel-pan channel-green" onclick="pressPan.call(this)">
+                <div class="channel-pan-bar"></div>
+                <div class="channel-pan-fill"></div>
+            </button>
+            <div class="channel-solo" onclick="toggleSolo.call(this)">
+                <p>SOLO</p>
+                <div class="channel-solo-triangle"></div>
+            </div>
+            <div class="channel-fader">
+                <p class="channel-fader-level">-&infin;</p>
+                <div class="channel-fader-ticks overview-channel-ticks"></div>
+                <div class="channel-fader-ticks overview-channel-ticks overview-major-tick"></div>
+                <div class="channel-fader-tick-labels overview-fader-tick-labels">
+                    <p>10</p>
+                    <p>5</p>
+                    <p>0</p>
+                    <p>5</p>
+                    <p>10</p>
+                    <p>20</p>
+                    <p>30</p>
+                    <p>50</p>
+                </div>
+                <div class="channel-fader-groove overview-fader-groove"></div>
+                <input class="fader overview-fader" type="range" min="-30" max="10" step="0.05" value="0" oninput="updateFader.call(this)">
+                <div class="peak-meter">
+                    <div class="peak-meter-bar"></div>
+                </div>
+                <p class="channel-label-const">CH 01</p>
+            </div>
+            <div class="channel-mute" onclick="toggleMute.call(this)">
+                <p>MUTE</p>
+                <div class="channel-mute-triangle"></div>
+            </div>
+        </div>
+
+        <div class="overview-config overview-panel">
+
+        </div>
+        <div class="overview-gate overview-panel">
+
+        </div>
+
+        <div class="overview-eq overview-panel">
+
+        </div>
+
+        <div class="overview-dyn overview-panel">
+
+        </div>
+
+        <div class="overview-sends overview-panel">
+
+        </div>
+
+        <div class="overview-main overview-panel">
+
+        </div>
     </div>
 
     <div class="gate-view alt-view">
