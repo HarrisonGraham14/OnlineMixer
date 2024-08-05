@@ -14,8 +14,6 @@ let volumes = [];
 let pans = [];
 
 const playButton = document.querySelector(".play-button");
-//const pauseButton = document.querySelector(".pause-button");
-//const stopButton = document.querySelector(".stop-button");
 const playerBar = document.querySelector(".player-bar");
 const playerTime = document.querySelector(".player-time");
 
@@ -219,6 +217,25 @@ function loadLayer(layerNum) {
         newChannel.style.width = (98.4 / maxChannels) + "%";
         newChannel.getElementsByClassName("fader")[0].style.height = (8 / maxChannels) + "svh ";
 
+        // only channels 1-16 have gates
+        if (id >= 16) {
+            newChannel.getElementsByClassName("channel-gate")[0].remove();
+            newChannel.getElementsByClassName("channel-blank")[0].style.marginBottom = "5.9svh";
+        
+            // of the others, only buses and LR have compressors
+            if ((id < 21 || id >= 25) && id != 29) {
+                newChannel.getElementsByClassName("channel-dyn")[0].remove();
+                newChannel.getElementsByClassName("channel-blank")[0].style.marginBottom = "11.8svh";
+
+                // of the others, only AUX/FX panel has EQs and pans
+                if (id >= 21) {
+                    newChannel.getElementsByClassName("channel-eq")[0].remove();
+                    newChannel.getElementsByClassName("channel-pan")[0].remove();
+                    newChannel.getElementsByClassName("channel-blank")[0].style.marginBottom = "24svh";
+                }
+            }
+        } 
+
         // displaying user-defined label
         newChannel.getElementsByClassName("channel-label-var")[0].innerHTML = allChannels[id].label;
         newChannel.getElementsByClassName("channel-label-var")[0].style.color = allChannels[id].fontColor;
@@ -226,8 +243,10 @@ function loadLayer(layerNum) {
 
         // displaying pan
         let fill = newChannel.getElementsByClassName("channel-pan-fill")[0];
-        fill.style.width = Math.abs(Number(allChannels[id].pan) / 2.1) + "%";
-        fill.style.left = allChannels[id].pan < 0 ? (50 - Math.abs(Number(allChannels[id].pan) / 2.1)) + "%" : "50%";
+        if (fill) {
+            fill.style.width = Math.abs(Number(allChannels[id].pan) / 2.1) + "%";
+            fill.style.left = allChannels[id].pan < 0 ? (50 - Math.abs(Number(allChannels[id].pan) / 2.1)) + "%" : "50%";
+        }
 
         // displaying solo
         if (allChannels[id].solo) {

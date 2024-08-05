@@ -119,6 +119,7 @@ p {
 }
 
 .channel-pan {
+    height: 5.5svh;
     margin: 0.4svh;
     border-style: none;
 }
