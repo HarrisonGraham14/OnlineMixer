@@ -151,7 +151,7 @@ function updatePlayerTime() {
     
     // Keeps tracks in sync
     for (let i = 1; i < 16; i++) {
-        if (Math.abs(audios[i].currentTime - audios[0].currentTime) > 0.05) audios[i].currentTime = audios[0].currentTime;
+        if (Math.abs(audios[i].currentTime - audios[0].currentTime) > 0.1) audios[i].currentTime = audios[0].currentTime;
     }
 }
 setInterval(updatePlayerTime, 100);
