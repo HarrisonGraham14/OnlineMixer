@@ -14,7 +14,6 @@
 <body>
     <div class="banner">
         <div class="banner-left">
-            <button class="back-button banner-button" onclick="closeView()">&#9001;</button>
             <img src="./images/logo.png" alt="logo">
             <div class="heading">
                 <h1 class="heading-upper">Mixer View</h1>
@@ -27,23 +26,20 @@
             <input class="player-bar" type="range" min="0" max="1" step="0.1" value="0">
             <p class="player-time">0:00</p>
         </div>
-
-        <button class="prev-button banner-button" onclick="viewSwitch('prev')">&#x2190;</button>
-        <button class="next-button banner-button" onclick="viewSwitch('next')">&#x2192;</button>
     </div>
 
     <div class="channels">
-        <div class="channel" data-index="0"> 
+        <div class="channel"> 
             <div class="channel-blank channel-green"></div>
-            <button class="channel-gate channel-green" onclick="openView(gateView, this.parentNode.dataset.index)">GATE</button>
-            <button class="channel-dyn channel-green" onclick="openView(dynamicView, this.parentNode.dataset.index)">DYN</button>
-            <button class="channel-eq channel-green" onclick="openView(eqView, this.parentNode.dataset.index)">EQ</button>
-            <button class="channel-pan channel-green" onclick="openPanner(this.parentNode.dataset.index)">
-                <div class="channel-pan-center"></div>
+            <button class="channel-gate channel-green" onclick="openView('gate-view', this.parentNode.id.substring(8))"><p>GATE</p></button>
+            <button class="channel-dyn channel-green" onclick="openView('dynamic-view', this.parentNode.id.substring(8))"><p>DYN</p></button>
+            <button class="channel-eq channel-green" onclick="openView('eq-view', this.parentNode.id.substring(8))"><p>EQ</p></button>
+            <button class="channel-pan channel-green" onclick="pressPan.call(this)">
                 <div class="channel-pan-bar"></div>
+                <div class="channel-pan-fill"></div>
             </button>
-            <button class="channel-label" onclick="openView(overviewView, this.parentNode.dataset.index)">CH 01</button>
-            <div class="channel-solo" data-active="false" onclick="this.dataset.active = (this.dataset.active == 'false')">
+            <button class="channel-label" onclick="openView('overview-view', this.parentNode.id.substring(8))"><p class="channel-label-var">CH 01</p></button>
+            <div class="channel-solo" onclick="toggleSolo.call(this)">
                 <p>SOLO</p>
                 <div class="channel-solo-triangle"></div>
             </div>
@@ -62,13 +58,13 @@
                     <p>50</p>
                 </div>
                 <div class="channel-fader-groove"></div>
-                <input class="fader" type="range" min="-30" max="10" step="0.05" value="-30">
+                <input class="fader" type="range" min="-30" max="10" step="0.05" value="-30" oninput="updateFader.call(this)">
                 <div class="peak-meter">
                     <div class="peak-meter-bar"></div>
                 </div>
                 <p class="channel-label-const">CH 01</p>
             </div>
-            <div class="channel-mute" data-active="false">
+            <div class="channel-mute" onclick="toggleMute.call(this)">
                 <p>MUTE</p>
                 <div class="channel-mute-triangle"></div>
             </div>
@@ -77,25 +73,29 @@
 
     <div class="buttons">
         <div class="buttons-left">
-            <button>Fine</button>
-            <button>Mutes</button>
-            <button>Snd->Fader</button>
-            <button>Bus 1 &#11015;</button>
-            <button>Bus Master</button>
+            <div><p>Fine</p></div>
+            <div><p>Mutes</p></div>
+            <div><p>Snd->Fader</p></div>
+            <div><p>Bus 1 &#11015;</p></div>
+            <div><p>Bus Master</p></div>
         </div>
         <div class="buttons-right">
-            <button class="buttons-layer" data-index="0" data-active="false" onclick="loadLayer(this.dataset.index)">Layer</button>
+            <div class="buttons-layer" onclick="layerPressed.call(this)"><p>Layer</p></div>
         </div>
     </div>
 
     <div class="overview-view alt-view">
-        <div class="channel overview-channel" data-channel="0">
-            <button class="channel-label">CH 01</button>
-            <button class="channel-pan channel-green" onclick="openPanner(overviewChannel.dataset.channel)">
-                <div class="channel-pan-center"></div>
+        <button class="back-button view-header-button" onclick="closeView(this)">&#9001;</button>
+        <button class="prev-button view-header-button" onclick="viewSwitch('prev')">&#x2190;</button>
+        <button class="next-button view-header-button" onclick="viewSwitch('next')">&#x2192;</button>
+
+        <div class="channel overview-channel" id="channel_overview">
+            <button class="channel-label"><p class="channel-label-var">CH 01</p></button>
+            <button class="channel-pan channel-green" onclick="pressPan.call(this)">
                 <div class="channel-pan-bar"></div>
+                <div class="channel-pan-fill"></div>
             </button>
-            <div class="channel-solo">
+            <div class="channel-solo" onclick="toggleSolo.call(this)">
                 <p>SOLO</p>
                 <div class="channel-solo-triangle"></div>
             </div>
@@ -114,65 +114,76 @@
                     <p>50</p>
                 </div>
                 <div class="channel-fader-groove overview-fader-groove"></div>
-                <input class="fader overview-fader" type="range" min="-30" max="10" step="0.05" value="0">
+                <input class="fader overview-fader" type="range" min="-30" max="10" step="0.05" value="0" oninput="updateFader.call(this)">
                 <div class="peak-meter">
                     <div class="peak-meter-bar"></div>
                 </div>
                 <p class="channel-label-const">CH 01</p>
             </div>
-            <div class="channel-mute">
+            <div class="channel-mute" onclick="toggleMute.call(this)">
                 <p>MUTE</p>
                 <div class="channel-mute-triangle"></div>
             </div>
         </div>
 
         <div class="overview-config overview-panel">
+
         </div>
-        
         <div class="overview-gate overview-panel">
+
         </div>
 
         <div class="overview-eq overview-panel">
+
         </div>
 
         <div class="overview-dyn overview-panel">
+
         </div>
 
         <div class="overview-sends overview-panel">
+
         </div>
 
         <div class="overview-main overview-panel">
+
         </div>
     </div>
 
     <div class="gate-view alt-view">
+        <button class="back-button view-header-button" onclick="closeView(this)">&#9001;</button>
+        <button class="prev-button view-header-button" onclick="viewSwitch('prev')">&#x2190;</button>
+        <button class="next-button view-header-button" onclick="viewSwitch('next')">&#x2192;</button>
     </div>
     
     <div class="eq-view alt-view">
+        <button class="back-button view-header-button" onclick="closeView(this)">&#9001;</button>
+        <button class="prev-button view-header-button" onclick="viewSwitch('prev')">&#x2190;</button>
+        <button class="next-button view-header-button" onclick="viewSwitch('next')">&#x2192;</button>
     </div>
 
     <div class="dynamic-view alt-view">
+        <button class="back-button view-header-button" onclick="closeView(this)">&#9001;</button>
+        <button class="prev-button view-header-button" onclick="viewSwitch('prev')">&#x2190;</button>
+        <button class="next-button view-header-button" onclick="viewSwitch('next')">&#x2192;</button>
     </div>
 
     <div class="sends-view alt-view">
+        <button class="back-button view-header-button" onclick="closeView(this)">&#9001;</button>
+        <button class="prev-button view-header-button" onclick="viewSwitch('prev')">&#x2190;</button>
+        <button class="next-button view-header-button" onclick="viewSwitch('next')">&#x2192;</button>
     </div>
 
-    <div class="pan-overlay" data-channel="">
+    <div class="pan-overlay">
         <button class="pan-overlay-button" onclick="this.parentNode.style.display = 'none'"></button>
         <div class="pan-overlay-panel">
             <p class="pan-readout">Pan: 0</p>
             <hr>
-            <div class="pan-overlay-center"></div>
-            <input class="pan-slider" type="range" min="-100" max="100" step="2" value="0" oninput="updatePanner()">
+            <input class="pan-slider" type="range" min="-100" max="100" step="2" value="0" oninput="inputPan.call(this)">
         </div>
         <button class="pan-overlay-button" onclick="this.parentNode.style.display = 'none'"></button>
     </div>
 
-    <script src="./colors.js"></script>
-    <script src="./player.js"></script>
-    <script src="./channel.js"></script>
-    <script src="./layers.js"></script>
-    <script src =./views.js></script>
-    <script src="./scenes.js"></script>
+    <script src="./script.js"></script>
 </body>
 </html>
