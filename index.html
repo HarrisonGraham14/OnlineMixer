@@ -9,6 +9,8 @@
     <meta name="description" content="Practise tool for mixing software and techniques">
     <meta name="author" content="Harrison Graham">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://www.gstatic.com/charts/loader.js"></script> 
 </head>
 
 <body>
@@ -127,21 +129,40 @@
         </div>
 
         <div class="overview-config overview-panel">
+            <button class="plain-button">CONFIG</button>
+            Gain
+            <button class="plain-button">&Oslash;</button>
+            <button class="plain-button">+48V</button>
+            <button class="plain-button">LINK</button>
         </div>
         
         <div class="overview-gate overview-panel">
+            <button class="plain-button" onclick="openView(gateView, currentChannel)">GATE</button>
+            <br>
+            <button class="plain-button" data-active="false">On</button>
+            <div class="overview-gate-graphic"></div>
         </div>
 
         <div class="overview-eq overview-panel">
+            <button class="plain-button" onclick="openView(eqView, currentChannel)">EQ</button>
+            <br>
+            <button class="plain-button" data-active="false">On</button>
+            <div class="overview-eq-graphic"></div>
         </div>
 
         <div class="overview-dyn overview-panel">
+            <button class="plain-button" onclick="openView(dynamicView, currentChannel)">DYN</button>
+            <br>
+            <button class="plain-button" data-active="false">On</button>
+            <div class="overview-dyn-graphic"></div>
         </div>
 
         <div class="overview-sends overview-panel">
+            <button class="plain-button" onclick="openView(sendsView, currentChannel)">SENDS</button>
         </div>
 
         <div class="overview-main overview-panel">
+            <button class="plain-button">MAIN</button>
         </div>
     </div>
 
@@ -149,6 +170,18 @@
     </div>
     
     <div class="eq-view alt-view">
+        <div class="eq-view-buttons">
+            <button class="plain-button">ON</button>
+            <button class="plain-button">Lowcut</button>
+            <div style="flex-grow:1"></div>
+            <p>RTA</p>
+            <button class="plain-button">CH01 &#11015;</button>
+            <button class="plain-button">Follow</button>
+            <button class="plain-button">Post</button>
+        </div>
+        <div class="eq-view-graph" onclick="updateEQGraph()">
+            
+        </div>
     </div>
 
     <div class="dynamic-view alt-view">
@@ -170,6 +203,7 @@
 
     <script src="./colors.js"></script>
     <script src="./player.js"></script>
+    <script src="eq.js"></script>
     <script src="./channel.js"></script>
     <script src="./layers.js"></script>
     <script src =./views.js></script>

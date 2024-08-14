@@ -32,9 +32,6 @@ const backButton = document.querySelector(".back-button");
 const prevButton = document.querySelector(".prev-button");
 const nextButton = document.querySelector(".next-button");
 
-let currentView;
-let currentChannel = 0;
-
 // overview channel setup
 let overviewChannel = document.querySelector(".overview-channel")
 overviewChannel.querySelector(".channel-mute").addEventListener("click", () =>  {
@@ -52,6 +49,7 @@ overviewChannel.querySelector(".fader").addEventListener("input", () =>  {
 overviewPeakMeterBar = overviewChannel.querySelector(".peak-meter-bar")
 setInterval(function () { overviewPeakMeterBar.style.height = channels[overviewChannel.dataset.channel].peakMeterBar.style.height; }, 50);
 
+let currentView;
 
 function openView(view, channel) {
     currentChannel = channel;
@@ -92,7 +90,11 @@ function closeView() {
     else if (gateView.style.display == "flex") gateView.style.display = "none";
     else if (overviewView.style.display == "flex") overviewView.style.display = "none";
 
-    if (overviewView.style.display == "flex")  lowerHeading.innerHTML = "Overview";
+    if (overviewView.style.display == "flex")  {
+        lowerHeading.innerHTML = "Overview";
+        openView(overviewView, currentChannel);
+    }
+
     else {
         upperHeading.innerHTML = "Mixer View";
         lowerHeading.innerHTML = "LR Mix";

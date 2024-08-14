@@ -1,37 +1,43 @@
 class Scene {
     folder = "";
-    trackNames = [];
-    trackColors = [];
-    trackVolumes = [];
-    trackPans = [];
+    channelNames = [];
+    channelColors = [];
+    channelVolumes = [];
+    channelPans = [];
+    linkedChannels = [];
 
     constructor(folder) {
         this.folder = folder;
-        this.trackNames = CHANNEL_NAMES.slice(0, 16);
-        this.trackColors = Array(16).fill(0);
-        this.trackVolumes = Array(14).fill(-Infinity);
-        this.trackPans = Array(16).fill(0);
-        this.trackExists = Array(16).fill(true);
+        this.channelNames = CHANNEL_NAMES.slice(0, 16);
+        this.channelColors = Array(16).fill(0);
+        this.channelVolumes = Array(14).fill(-Infinity);
+        this.channelPans = Array(16).fill(0);
+        this.channelExists = Array(16).fill(true);
     }
 
-    addNames(trackNames) { this.trackNames = trackNames.concat(this.trackNames.slice(trackNames.length, 16)); }
-    addColors(trackColors) { this.trackColors = trackColors.concat(this.trackColors.slice(trackColors.length, 16)); }
-    addVolumes(trackVolumes) { this.trackVolumes = trackVolumes.concat(this.trackVolumes.slice(trackVolumes.length, 16)); }
-    addPans(trackPans) { this.trackPans = trackPans.concat(this.trackPans.slice(trackPans.length, 16)); }
+    addNames(channelNames) { this.channelNames = channelNames.concat(this.channelNames.slice(channelNames.length, 16)); }
+    addColors(channelColors) { this.channelColors = channelColors.concat(this.channelColors.slice(channelColors.length, 16)); }
+    addVolumes(channelVolumes) { this.channelVolumes = channelVolumes.concat(this.channelVolumes.slice(channelVolumes.length, 16)); }
+    addPans(channelPans) { this.channelPans = channelPans.concat(this.channelPans.slice(channelPans.length, 16)); }
 
     load() {
 
         // channels with -inf gain are assumed not to have a source
         let loadChannels = [];
-        for (i in this.trackVolumes) if (this.trackVolumes[i] != -Infinity) loadChannels.push(i);
+        for (i in this.channelVolumes) if (this.channelVolumes[i] != -Infinity) loadChannels.push(i);
         loadAudio(this.folder, loadChannels);
 
-        for (let i = 0; i < 16; i++) {
-            channels[i].label = this.trackNames[i];
-            channels[i].labelColor = this.trackColors[i];
-            channels[i].setVolume(this.trackVolumes[i]);
-            channels[i].setPan(this.trackPans[i]);
+        for (i in this.linkedChannels) {
+            channels[this.linkedChannels[i]].setLink(true);
         }
+
+        for (let i = 0; i < 16; i++) {
+            channels[i].label = this.channelNames[i];
+            channels[i].labelColor = this.channelColors[i];
+            channels[i].setVolume(this.channelVolumes[i]);
+            channels[i].setPan(this.channelPans[i]);
+        }
+
         loadLayer(0);
     }
 }
@@ -41,5 +47,6 @@ SCENE_GoodGoodFather.addNames(["Vox Lead", "Vox Back 1", "Vox Back 2", "CH 04", 
 SCENE_GoodGoodFather.addColors([6, 2, 4, 0, 0, 0, 0, 5, 6, 0, 2, 2, 4, 4, 3, 3]);
 SCENE_GoodGoodFather.addVolumes([-8, -14, -14, -Infinity, -Infinity, -Infinity, -Infinity, -13.5, -13, -Infinity, -18.5, -18.5, -14, -14, -11.5, -11.5]);
 SCENE_GoodGoodFather.addPans([0, -20, 20, 0, 0, 0, 0, 0, -30, 0, -40, 100, -100, 100, -50, 50]);
+SCENE_GoodGoodFather.linkedChannels = [11, 13, 15];
 
 SCENE_GoodGoodFather.load();

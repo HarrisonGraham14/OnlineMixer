@@ -17,6 +17,8 @@ class Channel {
     label = "";
     labelColor = BLACK;
 
+    link = false;
+
     peakMeterBar;
 
     audio;
@@ -32,7 +34,7 @@ class Channel {
     constructor(index) {
 
         // create html element
-        this.index = index;
+        this.index = Number(index);
         this.htmlElement = CHANNEL_TEMPLATE.cloneNode(true);
         this.htmlElement.dataset.index = index;
         CHANNELS_PANEL.appendChild(this.htmlElement);
@@ -54,8 +56,6 @@ class Channel {
             this.gain.connect(this.gainAnalyser);
             this.gainAnalyser.fftSize = 32;
             this.gate = 1; ///to do
-
-            this.gain.connect(this.volume); ///temp
         }
         else this.htmlElement.querySelector(".channel-gate").style.visibility = "hidden";
 
@@ -67,11 +67,13 @@ class Channel {
 
         // all but sends & dca have eq/panning
         if (index < 25 || index == 29) {
-            this.eq = 1; ///to do
+            this.eq = new EQ();
             this.pan = new StereoPannerNode(audioContext);
-            this.volume.connect(this.pan);
             
-            this.pan.connect(audioContext.destination); ///temp
+            this.gain.connect(this.eq.highpass); ///temp routing
+            this.eq.connect(this.volume);
+            this.volume.connect(this.pan);
+            this.pan.connect(audioContext.destination);
         }
         else {
             this.htmlElement.querySelector(".channel-eq").style.visibility = "hidden";
@@ -101,17 +103,23 @@ class Channel {
         this.setVolume(faderValueToDB(this.htmlElement.querySelector(".fader").value), false);
     }
 
-    setVolume(dB, updateFader = true) {
+    setVolume(dB, updateFader = true, updateLink = true) {
         this.volume.gain.value = Math.pow(2, dB/6);
         this.htmlElement.querySelector(".channel-fader-level").innerHTML = dB <= -90 ? "-&infin;" : (dB > 0 ? "+" : "") + Number(dB).toFixed(1);
         if (updateFader) this.htmlElement.querySelector(".fader").value = dbToFaderValue(dB);
+
+        // sets volume of linked channel
+        if (this.link && updateLink) channels[this.index % 2 == 0 ? this.index + 1 : this.index - 1].setVolume(dB, true, false);
     }
 
-    toggleMute() {
+    toggleMute(updateLink = true) {
         let muteButton = this.htmlElement.querySelector(".channel-mute");
         muteButton.dataset.active = (muteButton.dataset.active == "false" ? "true" : "false");
         if (muteButton.dataset.active == "false") this.volume.connect(this.pan);
         else this.volume.disconnect(this.pan);
+
+        // toggles linked channel
+        if (this.link && updateLink) channels[this.index % 2 == 0 ? this.index + 1 : this.index - 1].toggleMute(false);
     }
 
     updateHtml() {
@@ -130,6 +138,17 @@ class Channel {
         if (isNaN(currentDecibels)) currentDecibels = -Infinity; 
         currentDecibels = Math.max(currentDecibels, -3-parseFloat(this.peakMeterBar.style.height));
         this.peakMeterBar.style.height = Math.min(100, -currentDecibels) + "%";   
+    }
+
+    setLink(value) {
+        this.link = value;
+        channels[this.index % 2 == 0 ? this.index + 1 : this.index - 1].link = value;
+
+        // pans hard left and right upon linking
+        if (value == true) {
+            this.setPan(this.index % 2 == 0 ? -100 : 100);
+            channels[this.index % 2 == 0 ? this.index + 1 : this.index - 1].setPan(this.index % 2 == 0 ? 100 : -100);
+        }
     }
 }
 
