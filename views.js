@@ -74,7 +74,13 @@ function openView(view, channel) {
     }
 
     else if (view == gateView) lowerHeading.innerHTML = "Gate";
-    else if (view == eqView) lowerHeading.innerHTML = "EQ";
+
+    else if (view == eqView) {
+        lowerHeading.innerHTML = "EQ";
+        updateEQGraph();
+        setEQHandlePositions();
+    }
+
     else if (view == dynamicView) lowerHeading.innerHTML = "Dynamic";
     else if (view == sendsView) lowerHeading.innerHTML = "Sends";
 

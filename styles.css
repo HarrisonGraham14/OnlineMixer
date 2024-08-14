@@ -523,9 +523,24 @@ button[data-active="true"] {
     text-align: center;
 }
 
-.eq-view-graph {
+.eq-view-graph-area {
     background-color: #002D2A;
     flex-grow: 1;
     margin: 0.2svh 0.3svw;
     margin-bottom: 8.5svh;
+    position: relative;
+}
+
+.eq-view-graph {
+    width: 100%;
+    height: 100%;
+}
+
+.eq-control-handle {
+    height: 8svh;
+    width: 8svh;
+    border-radius: 4svh;
+    margin: -4svh;
+    opacity: 0.5;
+    position: absolute;
 }
