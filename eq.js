@@ -166,15 +166,12 @@ function EQHandleGrabbed(event, handle) {
         else if (handle.dataset.control == "band4") linkedFilter = channels[linkedChannel].eq.band4;
     }
 
-    console.log("FUNCTION: HANDLE GRABBED");
     if (event.type == "mousedown") {
         document.addEventListener("mousemove", EQHandleMoved, event);
         document.addEventListener("mouseup", EQHandleReleased, event);
     }
     
     else if (event.type == "touchstart") {
-        console.log("EVENT: TOUCHSTART");
-        console.log("");
         document.addEventListener("touchmove", EQHandleMoved, event);
         document.addEventListener("touchend", EQHandleReleased, event);
     }
@@ -186,15 +183,12 @@ function EQHandleMoved(event) {
     let x;
     let y;
 
-    console.log("FUNCTION: HANDLE MOVED");
     if (event.type == "mousemove") {
         x = Math.max(rect.width * 0.04, Math.min(event.clientX - rect.left, rect.width * 0.96));
         y = currentHandle.style.top = Math.max(rect.height * 0.05, Math.min(event.clientY - rect.top, rect.height * 0.95));
     }
     
     else if (event.type == "touchmove") {
-        console.log("EVENT: TOUCHMOVE (" + event.touches.length + " touches)");
-        console.log("");
         if (event.touches.length > 1) return;
         x = Math.max(rect.width * 0.04, Math.min(event.touches[0].pageX - rect.left, rect.width * 0.96));
         y = currentHandle.style.top = Math.max(rect.height * 0.05, Math.min(event.touches[0].pageY - rect.top, rect.height * 0.95));
@@ -216,23 +210,17 @@ function EQHandleMoved(event) {
     }
 }
 
-let test;
 function EQHandleReleased(event) {
     if (!currentHandle) return;
 
-    console.log("FUNCTION: HANDLE RELEASED");
-    console.log(event)
-    test = event;
     if (event.type == "mouseup") {
         document.removeEventListener("mousemove", EQHandleMoved);
         document.removeEventListener("mousemove", EQHandleReleased);
     }
 
-    else if (event.type == "touchup") {
-        console.log("EVENT: TOUCHUP");
-        console.log(" ");
+    else if (event.type == "touchend") {
         document.removeEventListener("touchmove", EQHandleMoved);
-        document.removeEventListener("touchup", EQHandleReleased);
+        document.removeEventListener("touchend", EQHandleReleased);
     }
     
     updateEQGraph();
