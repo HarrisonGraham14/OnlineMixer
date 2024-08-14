@@ -180,7 +180,6 @@ function EQHandleGrabbed(event, handle) {
     }
 }
 
-let test;
 function EQHandleMoved(event) {
     if (!currentHandle) return;
     let rect = eqHandleDiv.getBoundingClientRect();
@@ -217,10 +216,13 @@ function EQHandleMoved(event) {
     }
 }
 
+let test;
 function EQHandleReleased(event) {
     if (!currentHandle) return;
 
     console.log("FUNCTION: HANDLE RELEASED");
+    console.log(event)
+    test = event;
     if (event.type == "mouseup") {
         document.removeEventListener("mousemove", EQHandleMoved);
         document.removeEventListener("mousemove", EQHandleReleased);
@@ -228,7 +230,7 @@ function EQHandleReleased(event) {
 
     else if (event.type == "touchup") {
         console.log("EVENT: TOUCHUP");
-        console.log("");
+        console.log(" ");
         document.removeEventListener("touchmove", EQHandleMoved);
         document.removeEventListener("touchup", EQHandleReleased);
     }
