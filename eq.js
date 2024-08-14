@@ -149,7 +149,7 @@ let currentHandle;
 let currentFilter;
 let linkedFilter;
 let EQUpdateInterval;
-function EQHandleGrabbed(handle) {
+function EQHandleGrabbed(event, handle) {
     currentHandle = handle;
     if (handle.dataset.control == "highpass") currentFilter = channels[currentChannel].eq.highpass;
     else if (handle.dataset.control == "band1") currentFilter = channels[currentChannel].eq.band1;
@@ -166,15 +166,35 @@ function EQHandleGrabbed(handle) {
         else if (handle.dataset.control == "band4") linkedFilter = channels[linkedChannel].eq.band4;
     }
 
-    document.addEventListener("mousemove", EQHandleMoved, event);
-    document.addEventListener("mouseup", EQHandleReleased);
+    if (event.type == "mousedown") {
+        document.addEventListener("mousemove", EQHandleMoved, event);
+        document.addEventListener("mouseup", EQHandleReleased, event);
+    }
+    
+    else if (event.type == "touchstart") {
+        document.addEventListener("touchmove", EQHandleMoved, event);
+        document.addEventListener("touchend", EQHandleReleased, event);
+    }
 }
 
+let test;
 function EQHandleMoved(event) {
     if (!currentHandle) return;
     let rect = eqHandleDiv.getBoundingClientRect();
-    let x = Math.max(rect.width * 0.04, Math.min(event.clientX - rect.left, rect.width * 0.96));
-    let y = currentHandle.style.top = Math.max(rect.height * 0.05, Math.min(event.clientY - rect.top, rect.height * 0.95))
+    let x;
+    let y;
+
+    if (event.type == "mousemove") {
+        x = Math.max(rect.width * 0.04, Math.min(event.clientX - rect.left, rect.width * 0.96));
+        y = currentHandle.style.top = Math.max(rect.height * 0.05, Math.min(event.clientY - rect.top, rect.height * 0.95));
+    }
+    
+    else if (event.type == "touchmove") {
+        if (event.touches.length > 1) return;
+        x = Math.max(rect.width * 0.04, Math.min(event.touches[0].pageX - rect.left, rect.width * 0.96));
+        y = currentHandle.style.top = Math.max(rect.height * 0.05, Math.min(event.touches[0].pageY - rect.top, rect.height * 0.95));
+    }
+
     currentHandle.style.left = x + "px";
     if (currentHandle != highpassHandle) currentHandle.style.top = y + "px";
 
@@ -191,9 +211,18 @@ function EQHandleMoved(event) {
     }
 }
 
-function EQHandleReleased() {
+function EQHandleReleased(event) {
     if (!currentHandle) return;
-    document.removeEventListener("mousemove", EQHandleMoved, event);
-    document.removeEventListener("mousemove", EQHandleReleased);
+
+    if (event.type == "mouseup") {
+        document.removeEventListener("mousemove", EQHandleMoved);
+        document.removeEventListener("mousemove", EQHandleReleased);
+    }
+
+    else if (event.type == "touchup") {
+        document.removeEventListener("touchmove", EQHandleMoved);
+        document.removeEventListener("touchup", EQHandleReleased);
+    }
+    
     updateEQGraph();
 }
