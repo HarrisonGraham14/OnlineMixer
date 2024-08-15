@@ -544,3 +544,17 @@ button[data-active="true"] {
     opacity: 0.5;
     position: absolute;
 }
+
+.eq-handle-outline {
+    height: 10svh;
+    width: 10svh;
+    border-radius: 5.2svh;
+    margin: -1.4svh;
+    border-width: 0.4svh;
+    border-color: white;
+    border-style: solid;
+}
+
+.eq-control-handle[data-active="false"]>div {
+    border-color: transparent;
+}

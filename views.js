@@ -79,6 +79,9 @@ function openView(view, channel) {
         lowerHeading.innerHTML = "EQ";
         updateEQGraph();
         setEQHandlePositions();
+        if (currentHandle) currentHandle.dataset.active = "false";
+        currentHandle = null;
+        eqTouches = [];
     }
 
     else if (view == dynamicView) lowerHeading.innerHTML = "Dynamic";

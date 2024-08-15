@@ -88,7 +88,6 @@ let xValues = new Float32Array([...Array(250).keys()].map(e => 20 * Math.pow(100
 google.charts.load('current',{packages:['corechart']});
 google.charts.setOnLoadCallback(updateEQGraph);
 
-
 function updateEQGraph() {
     if (!channels[currentChannel].eq) return;
 
@@ -118,7 +117,7 @@ function updateEQGraph() {
     let data = new google.visualization.arrayToDataTable(dataArrayProcessed, true);
 
     if (!chart) chart = new google.visualization.AreaChart(document.querySelector(".eq-view-graph"));
-    chart.draw(data, chartOptions);
+    else chart.draw(data, chartOptions);
 }
 
 const eqHandleDiv = document.querySelector(".eq-view-graph-area");
@@ -145,12 +144,15 @@ function setEQHandlePositions() {
     band4Handle.style.top = String(50 - (0.9 * channels[currentChannel].eq.band4.gain.value / 0.3)) + "%";
 }
 
-let currentHandle;
+let currentHandle = null;
 let currentFilter;
 let linkedFilter;
 let EQUpdateInterval;
 function EQHandleGrabbed(event, handle) {
+    if (currentHandle) currentHandle.dataset.active = "false";
+    handle.dataset.active = "true";
     currentHandle = handle;
+
     if (handle.dataset.control == "highpass") currentFilter = channels[currentChannel].eq.highpass;
     else if (handle.dataset.control == "band1") currentFilter = channels[currentChannel].eq.band1;
     else if (handle.dataset.control == "band2") currentFilter = channels[currentChannel].eq.band2;
@@ -224,4 +226,50 @@ function EQHandleReleased(event) {
     }
     
     updateEQGraph();
+}
+
+eqHandleDiv.addEventListener("wheel", (event) => {
+    if (!currentHandle) return;
+    let newQ = currentFilter.Q.value + event.deltaY/50;
+    newQ = Math.max(0.3, Math.min(newQ, 10));
+    currentFilter.Q.setValueAtTime(newQ, 0);
+    updateEQGraph();
+});
+
+let eqTouches = [];
+eqHandleDiv.addEventListener("touchstart", (event) => {
+    let newTouches = event.changedTouches;
+    for (let i = 0; i < newTouches.length; i++) {
+        eqTouches.push(newTouches[i]);
+    }
+});
+
+eqHandleDiv.addEventListener("touchmove", (event) => {
+    console.log("TEST"); ///
+    let movedTouches = event.changedTouches;
+    for (let i = 0; i < movedTouches.length; i++) {
+        console.log(movedTouches[i]); ///
+        for (let j = 0; j < eqTouches.length; j++) {
+            if (movedTouches[i].identifier == eqTouches[j].identifier) {
+                if (eqTouches.length > 2)  {
+                    let anchorTouch = (j == 0 ? eqTouches[eqTouches.length - 1] : eqTouches[0]);
+
+                    // calculate pinch magnitude with dot product
+                    let deltaQ = ((anchorTouch.pageX - movedTouches[i].pageX) * (anchorTouch.pageX - eqTouches[i].pageX) + (anchorTouch.pageY - movedTouches[i].pageY) * (anchorTouch.pageY - eqTouches[i].pageY)) / 50;
+
+                    let newQ = currentFilter.Q.value + deltaQ;
+                    newQ = Math.max(0.3, Math.min(newQ, 10));
+                    currentFilter.Q.setValueAtTime(newQ, 0);
+                }
+                eqTouches[j] = movedTouches[i];
+            }
+        }
+    }
+    updateEQGraph();
+});
+
+eqHandleDiv.addEventListener("touchend", EQRemoveTouch);
+eqHandleDiv.addEventListener("touchcancel", EQRemoveTouch);
+function EQRemoveTouch(event) {
+    
 }
