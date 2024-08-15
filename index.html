@@ -37,9 +37,9 @@
     <div class="channels">
         <div class="channel" data-index="0"> 
             <div class="channel-blank channel-green"></div>
-            <button class="channel-gate channel-green" onclick="openView(gateView, this.parentNode.dataset.index)">GATE</button>
-            <button class="channel-dyn channel-green" onclick="openView(dynamicView, this.parentNode.dataset.index)">DYN</button>
-            <button class="channel-eq channel-green" onclick="openView(eqView, this.parentNode.dataset.index)">EQ</button>
+            <button class="channel-gate channel-green" data-active="false" onclick="openView(gateView, this.parentNode.dataset.index)">GATE</button>
+            <button class="channel-dyn channel-green" data-active="false" onclick="openView(dynamicView, this.parentNode.dataset.index)">DYN</button>
+            <button class="channel-eq channel-green" data-active="false" onclick="openView(eqView, this.parentNode.dataset.index)">EQ</button>
             <button class="channel-pan channel-green" onclick="openPanner(this.parentNode.dataset.index)">
                 <div class="channel-pan-center"></div>
                 <div class="channel-pan-bar"></div>
@@ -146,7 +146,7 @@
         <div class="overview-eq overview-panel">
             <button class="plain-button" onclick="openView(eqView, currentChannel)">EQ</button>
             <br>
-            <button class="plain-button" data-active="false">On</button>
+            <button class="plain-button overview-view-toggle-bands" data-active="false" onclick="toggleEQ(currentChannel)">On</button>
             <div class="overview-eq-graphic"></div>
         </div>
 
@@ -171,8 +171,8 @@
     
     <div class="eq-view alt-view">
         <div class="eq-view-buttons">
-            <button class="plain-button">ON</button>
-            <button class="plain-button">Lowcut</button>
+            <button class="plain-button eq-view-toggle-bands" data-active="false" onclick="toggleEQ(currentChannel);">ON</button>
+            <button class="plain-button eq-view-toggle-highpass" data-active="false" onclick="toggleHighpass(currentChannel);">Lowcut</button>
             <div style="flex-grow:1"></div>
             <p style="font-size:2svh">RTA</p>
             <button class="plain-button">CH01 &#11015;</button>

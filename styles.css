@@ -139,6 +139,11 @@ p {
     font-size: 2.5svh;
 }
 
+.channel-green[data-active="true"] {
+    color: #B9BABC;
+    border-color: #176363;
+}
+
 .channel-blank {
     border-style: none;
 }

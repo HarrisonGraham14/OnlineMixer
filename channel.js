@@ -25,8 +25,11 @@ class Channel {
     source;
     gain;
     gainAnalyser;
+    preGate = new GainNode(audioContext);
     gate;
+    preEq = new GainNode(audioContext);
     eq;
+    preCompressor = new GainNode(audioContext);
     compressor;
     volume = new GainNode(audioContext);
     pan;
@@ -45,7 +48,11 @@ class Channel {
 
         // start channels as hidden - load through scene select
         this.htmlElement.style.display = "none";
-        
+
+        this.preGate.connect(this.preEq);
+        this.preEq.connect(this.preCompressor);
+        this.preCompressor.connect(this.volume);
+
         // only channels 1-16 have input/gain/gates
         if (index < 16) {
             this.audio = new Audio;
@@ -55,13 +62,15 @@ class Channel {
             this.source.connect(this.gain);
             this.gain.connect(this.gainAnalyser);
             this.gainAnalyser.fftSize = 32;
-            this.gate = 1; ///to do
+            this.gain.connect(this.preGate);
+
+            this.gate = null; ///to do
         }
         else this.htmlElement.querySelector(".channel-gate").style.visibility = "hidden";
 
         // all but sends, returns & dca have compression
         if ((index < 25 && (index < 16 || index > 20)) || index == 29) {
-            this.compressor = 1; ///to do
+            this.compressor = null; ///to do
         }
         else this.htmlElement.querySelector(".channel-dyn").style.visibility = "hidden";
 
@@ -70,8 +79,8 @@ class Channel {
             this.eq = new EQ();
             this.pan = new StereoPannerNode(audioContext);
             
-            this.gain.connect(this.eq.highpass); ///temp routing
-            this.eq.connect(this.volume);
+            this.preEq.connect(this.eq.postHighpass);
+            this.eq.connect(this.preCompressor);
             this.volume.connect(this.pan);
             this.pan.connect(audioContext.destination);
         }

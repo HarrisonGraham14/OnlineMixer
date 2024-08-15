@@ -1,9 +1,13 @@
 class EQ {
     highpass = new BiquadFilterNode(audioContext);
+    postHighpass = new GainNode(audioContext);
     band1 = new BiquadFilterNode(audioContext);
     band2 = new BiquadFilterNode(audioContext);
     band3 = new BiquadFilterNode(audioContext);
     band4 = new BiquadFilterNode(audioContext);
+
+    highpassActive = false;
+    bandsActive = false;
 
     constructor() {
         this.highpass.frequency.setValueAtTime(36.4, 0);
@@ -30,13 +34,14 @@ class EQ {
         this.band4.gain.setValueAtTime(0, 0);
         this.band4.type = "highshelf";
 
-        this.highpass.connect(this.band1);
+        this.highpass.connect(this.postHighpass);
         this.band1.connect(this.band2);
         this.band2.connect(this.band3);
         this.band3.connect(this.band4);
     }
 
     connect(destination) {
+        this.postHighpass.connect(destination);
         this.band4.connect(destination);
     }
 }
@@ -101,10 +106,8 @@ function updateEQGraph() {
     channels[currentChannel].eq.band4.getFrequencyResponse(xValues, dataArray[5], phaseDumpArray);
     
     dataArray[6].fill(1);
-    ///if highpass active
-    dataArray[6].set(dataArray[1]);
-    ///if eq active
-    dataArray[6] = dataArray[6].map((e, i) => e * dataArray[2][i] * dataArray[3][i] * dataArray[4][i] * dataArray[5][i]);
+    if (channels[currentChannel].eq.highpassActive) dataArray[6].set(dataArray[1]);
+    if (channels[currentChannel].eq.bandsActive) dataArray[6] = dataArray[6].map((e, i) => e * dataArray[2][i] * dataArray[3][i] * dataArray[4][i] * dataArray[5][i]);
 
     let dataArrayProcessed = [];
     for (let i = 0; i < xValues.length; i++) {
@@ -229,7 +232,7 @@ function EQHandleReleased(event) {
 }
 
 eqHandleDiv.addEventListener("wheel", (event) => {
-    if (!currentHandle) return;
+    if (!currentHandle || currentFilter.type == "highpass") return;
     let newQ = currentFilter.Q.value + event.deltaY/50;
     newQ = Math.max(0.3, Math.min(newQ, 10));
     currentFilter.Q.setValueAtTime(newQ, 0);
@@ -245,31 +248,63 @@ eqHandleDiv.addEventListener("touchstart", (event) => {
 });
 
 eqHandleDiv.addEventListener("touchmove", (event) => {
-    console.log("TEST"); ///
     let movedTouches = event.changedTouches;
     for (let i = 0; i < movedTouches.length; i++) {
-        console.log(movedTouches[i]); ///
         for (let j = 0; j < eqTouches.length; j++) {
             if (movedTouches[i].identifier == eqTouches[j].identifier) {
-                if (eqTouches.length > 2)  {
+                if (eqTouches.length > 2 && currentFilter.type != "highpass")  {
                     let anchorTouch = (j == 0 ? eqTouches[eqTouches.length - 1] : eqTouches[0]);
 
                     // calculate pinch magnitude with dot product
-                    let deltaQ = ((anchorTouch.pageX - movedTouches[i].pageX) * (anchorTouch.pageX - eqTouches[i].pageX) + (anchorTouch.pageY - movedTouches[i].pageY) * (anchorTouch.pageY - eqTouches[i].pageY)) / 50;
+                    let deltaQ = ((anchorTouch.pageX - movedTouches[i].pageX) * (movedTouches[i].pageX - eqTouches[j].pageX) + (anchorTouch.pageY - movedTouches[i].pageY) * (movedTouches[i].pageY - eqTouches[j].pageY)) / 5000;
+                    console.log(deltaQ);
 
                     let newQ = currentFilter.Q.value + deltaQ;
                     newQ = Math.max(0.3, Math.min(newQ, 10));
                     currentFilter.Q.setValueAtTime(newQ, 0);
                 }
                 eqTouches[j] = movedTouches[i];
+                return;
             }
         }
     }
-    updateEQGraph();
 });
 
 eqHandleDiv.addEventListener("touchend", EQRemoveTouch);
 eqHandleDiv.addEventListener("touchcancel", EQRemoveTouch);
 function EQRemoveTouch(event) {
+    let movedTouches = event.changedTouches;
+    for (let i = 0; i < movedTouches.length; i++) {
+        for (let j = 0; j < eqTouches.length; j++) {
+            if (movedTouches[i].identifier == eqTouches[j].identifier) {
+                eqTouches = eqTouches.slice(0, j).concat(eqTouches.slice(j + 1));
+                continue;
+            }
+        }
+    }
+    if (eqTouches.length < 2) updateEQGraph();
+}
+
+function toggleEQ(index) {
+    channels[index].eq.bandsActive = !channels[index].eq.bandsActive;
+    channels[index].htmlElement.querySelector(".channel-eq").dataset.active = channels[index].eq.bandsActive;
+    document.querySelector(".eq-view-toggle-bands").dataset.active = channels[index].eq.bandsActive;
+    document.querySelector(".overview-view-toggle-bands").dataset.active = channels[index].eq.bandsActive;
     
+    channels[index].eq.postHighpass.disconnect();
+    if (channels[index].eq.bandsActive) channels[index].eq.postHighpass.connect(channels[index].eq.band1);
+    else channels[index].eq.postHighpass.connect(channels[index].preCompressor);
+    
+    updateEQGraph();
+}
+
+function toggleHighpass(index) {
+    channels[index].eq.highpassActive = !channels[index].eq.highpassActive;
+    document.querySelector(".eq-view-toggle-highpass").dataset.active = channels[index].eq.highpassActive;
+
+    channels[index].preEq.disconnect();
+    if (channels[index].eq.highpassActive) channels[index].preEq.connect(channels[index].eq.highpass);
+    else channels[index].preEq.connect(channels[index].eq.postHighpass);
+
+    updateEQGraph();
 }

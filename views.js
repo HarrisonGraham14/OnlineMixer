@@ -71,6 +71,8 @@ function openView(view, channel) {
         overviewChannel.querySelector(".fader").value = channels[channel].htmlElement.querySelector(".fader").value;
         overviewChannel.querySelector(".channel-mute").dataset.active = channels[channel].htmlElement.querySelector(".channel-mute").dataset.active;
         overviewChannel.querySelector(".channel-label-const").innerHTML = channels[channel].htmlElement.querySelector(".channel-label-const").innerHTML;
+
+        document.querySelector(".overview-view-toggle-bands").dataset.active = channels[currentChannel].htmlElement.querySelector(".channel-eq").dataset.active;
     }
 
     else if (view == gateView) lowerHeading.innerHTML = "Gate";
@@ -82,6 +84,9 @@ function openView(view, channel) {
         if (currentHandle) currentHandle.dataset.active = "false";
         currentHandle = null;
         eqTouches = [];
+
+        document.querySelector(".eq-view-toggle-bands").dataset.active = channels[currentChannel].htmlElement.querySelector(".channel-eq").dataset.active;
+        document.querySelector(".eq-view-toggle-highpass").dataset.active = channels[currentChannel].eq.highpassActive;
     }
 
     else if (view == dynamicView) lowerHeading.innerHTML = "Dynamic";
