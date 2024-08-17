@@ -24,7 +24,7 @@ class Channel {
     audio;
     source;
     gain;
-    gainAnalyser;
+    meterAnalyser  = new AnalyserNode(audioContext);
     preGate = new GainNode(audioContext);
     gate;
     preEq = new GainNode(audioContext);
@@ -33,6 +33,12 @@ class Channel {
     compressor;
     volume = new GainNode(audioContext);
     pan;
+
+    effect;
+    preFX1;
+    preFX2;
+    preFX3;
+    preFX4;
 
     constructor(index) {
 
@@ -53,20 +59,26 @@ class Channel {
         this.preEq.connect(this.preCompressor);
         this.preCompressor.connect(this.volume);
 
+        // peak meter
+        this.peakMeterBar = this.htmlElement.querySelector(".peak-meter-bar");
+        this.peakMeterBar.style.height = "100%";
+        setInterval(this.updatemeterAnalyser.bind(this), 50);
+        this.meterAnalyser.fftSize = 32;
+
         // only channels 1-16 have input/gain/gates
         if (index < 16) {
             this.audio = new Audio;
             this.source = audioContext.createMediaElementSource(this.audio);
             this.gain = new GainNode(audioContext);
-            this.gainAnalyser = new AnalyserNode(audioContext);
             this.source.connect(this.gain);
-            this.gain.connect(this.gainAnalyser);
-            this.gainAnalyser.fftSize = 32;
+            this.gain.connect(this.meterAnalyser);
             this.gain.connect(this.preGate);
-
             this.gate = null; ///to do
         }
-        else this.htmlElement.querySelector(".channel-gate").style.visibility = "hidden";
+        else {
+            this.htmlElement.querySelector(".channel-gate").style.visibility = "hidden";
+            this.preEq.connect(this.meterAnalyser);
+        }
 
         // all but sends, returns & dca have compression
         if ((index < 25 && (index < 16 || index > 20)) || index == 29) {
@@ -83,23 +95,56 @@ class Channel {
             this.preEq.connect(this.eq.postHighpass);
             this.eq.connect(this.preCompressor);
             this.volume.connect(this.pan);
-            this.pan.connect(audioContext.destination);///temp
         }
         else {
             this.htmlElement.querySelector(".channel-eq").style.visibility = "hidden";
             this.htmlElement.querySelector(".channel-pan").style.visibility = "hidden";
         }
 
+        // channels 1-16 and aux/fx have sends
+        if (index < 21) {
+            this.preFX1 = new GainNode(audioContext);
+            this.preFX2 = new GainNode(audioContext);
+            this.preFX3 = new GainNode(audioContext);
+            this.preFX4 = new GainNode(audioContext);
+
+            this.preFX1.gain.setValueAtTime(0, 0);
+            this.preFX2.gain.setValueAtTime(0, 0);
+            this.preFX3.gain.setValueAtTime(0, 0);
+            this.preFX4.gain.setValueAtTime(0, 0);
+
+            this.pan.connect(this.preFX1);
+            this.pan.connect(this.preFX2);
+            this.pan.connect(this.preFX3);
+            this.pan.connect(this.preFX4);
+        }
+
+        // fx - reverbs
+        if (index == 25 || index == 26) {
+            this.effect = new ConvolverNode(audioContext);
+
+            if (index == 25) this.loadImpulseResponse("./impulse/bright plate.wav");
+            else this.loadImpulseResponse("./impulse/warm hall.wav");
+
+            this.preEq.connect(this.effect);
+            this.effect.connect(this.volume);
+        }
+
+        // fx - delays
+        if (index == 27 || index == 28) {
+            this.effect = new DelayNode(audioContext);
+            
+            this.effect.delayTime.setValueAtTime(index == 27 ? 0.25 : 0.14, 0);
+            this.preCompressor.gain.setValueAtTime(0.35, 0);
+
+            this.preCompressor.connect(this.effect);
+            this.effect.connect(this.preCompressor);
+            this.effect.connect(this.volume);
+        }
+
         // input events
         this.htmlElement.querySelector(".fader").addEventListener("input", () => this.pollVolume());
         this.htmlElement.querySelector(".channel-mute").addEventListener("click", () => this.toggleMute());
-
-        // peak meter
-        if (index < 16) { ///temp
-        this.peakMeterBar = this.htmlElement.querySelector(".peak-meter-bar");
-        this.peakMeterBar.style.height = "100%";
-        setInterval(this.updateGainAnalyser.bind(this), 50);
-        }
     }
 
     setPan(value) {
@@ -141,10 +186,10 @@ class Channel {
         this.setVolume(Math.log2(this.volume.gain.value) * 6);
     }
 
-    updateGainAnalyser() {
+    updatemeterAnalyser() {
         if (this.htmlElement.style.display != "flex") return;
         let sampleBuffer = new Float32Array(32);
-        this.gainAnalyser.getFloatTimeDomainData(sampleBuffer);
+        this.meterAnalyser.getFloatTimeDomainData(sampleBuffer);
         let currentDecibels = 20 * Math.log10(sampleBuffer.reduce((a, b) => Math.max(a, b)));
         if (isNaN(currentDecibels)) currentDecibels = -Infinity; 
         currentDecibels = Math.max(currentDecibels, -3-parseFloat(this.peakMeterBar.style.height));
@@ -160,6 +205,16 @@ class Channel {
             this.setPan(this.index % 2 == 0 ? -100 : 100);
             channels[this.index % 2 == 0 ? this.index + 1 : this.index - 1].setPan(this.index % 2 == 0 ? 100 : -100);
         }
+    }
+
+    async loadImpulseResponse(file) {
+        try {
+            const response = await fetch(file);
+            const arrayBuffer = await response.arrayBuffer();
+            const decodedAudio = await audioContext.decodeAudioData(arrayBuffer);
+            this.effect.buffer = decodedAudio;
+          } 
+          catch (error) { console.error("Impulse response failed to load"); }
     }
 }
 
@@ -180,6 +235,29 @@ function faderValueToDB(faderValue) {
 }
 
 let channels = [];
-for (i in CHANNEL_NAMES) {
+for (let i in CHANNEL_NAMES) {
     channels.push(new Channel(i));
 }
+
+// inter-channel routing
+// fx sends
+for (let i = 0; i < 16; i++) { ///currently cant send fx to fx
+    if (i != 17) channels[i].preFX1.connect(channels[25].preEq);
+    if (i != 18) channels[i].preFX2.connect(channels[26].preEq);
+    if (i != 19) channels[i].preFX3.connect(channels[27].preEq);
+    if (i != 20) channels[i].preFX4.connect(channels[28].preEq);
+}
+
+// fx returns
+channels[25].volume.connect(channels[17].preEq);
+channels[26].volume.connect(channels[18].preEq);
+channels[27].volume.connect(channels[19].preEq);
+channels[28].volume.connect(channels[20].preEq);
+
+// main
+for (let i = 0; i < channels.length; i++) {
+    if (i >= 25 && i <= 29) continue;
+    if (channels[i].pan) channels[i].pan.connect(channels[29].preEq);
+    else channels[i].volume.connect(channels[29].preEq);
+}
+channels[29].volume.connect(audioContext.destination);
