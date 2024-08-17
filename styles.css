@@ -46,6 +46,19 @@ p {
     padding-left: 0.3svw;
 }
 
+.settings-button {
+    right: 11svw;
+    font-size: 2.5svh;
+}
+
+.settings-button[data-active="true"] {
+    color: #10E5EB;
+}
+
+.settings-toggle {
+    visibility: hidden;
+}
+
 .prev-button {
     right: 6svw;
 }
@@ -443,6 +456,11 @@ button[data-active="true"] {
     width: 6svw;
 }
 
+.small-button {
+    height: min-content;
+    width: 7svw;
+}
+
 .overview-channel {
     width: 7%;
     margin-left: 0.2%;
@@ -562,4 +580,123 @@ button[data-active="true"] {
 
 .eq-control-handle[data-active="false"]>div {
     border-color: transparent;
+}
+
+.input-knob {
+    width: 7svw;
+}
+
+.input-knob>p {
+    font-size: 2.5svh;
+    font-weight: 600;
+    color: #B9BABC;
+    text-align: center;
+}
+
+.input-knob-mask-1 {
+    margin-left: 1svw;
+    width: 5svw;
+    height: 5svw;
+    --mask: radial-gradient(transparent 45%, red 45%, red 65%, transparent 65%);
+    -webkit-mask: var(--mask);
+    mask: var(--mask);
+}
+
+.input-knob-mask-2 {
+    width: 100%;
+    height: 100%;
+    --mask:
+        linear-gradient(-45deg, transparent 50%, red 50%),
+        linear-gradient(45deg, transparent 50%, red 50%);
+    -webkit-mask: var(--mask);
+    mask: var(--mask);
+    background-color: #176363;
+}
+
+.input-knob-mask-3 {
+    width: 100%;
+    height: 100%;
+}
+
+.input-knob-mask-3[data-lower-half="true"] {
+    --mask: linear-gradient(to left, transparent 50%, red 50%);
+    -webkit-mask: var(--mask);
+    mask: var(--mask);
+}
+
+.input-knob-readout {
+    margin-top: -2svh;
+}
+
+.input-knob-highlight {
+    width: 100%;
+    height: 100%;
+    background-color: #10E5EB;
+}
+
+.input-knob-dial {
+    position: relative;
+    left: 30%;
+    width: 40%;
+    top: -2.5svw;
+    height: 0.2svw;
+    margin-top: -0.1svw;
+    background-color: #10E5EB;
+    --mask: linear-gradient(to left, transparent 50%, red 50%);
+    -webkit-mask: var(--mask);
+    mask: var(--mask);
+    transform: rotate(-45deg);
+}
+
+.overview-config>button, .overview-knob-gain {
+    margin-bottom: 4.5svh;
+}
+
+.dynamic-view {
+    justify-content: center;
+}
+
+.dynamic-view-panel-main {
+    margin-top: 2svh;
+    width: 80svh;
+    height: 80svh;
+    background-color: #002D2A;
+    margin-right: 0.5svh;
+    display: flex;
+    flex-direction: column;
+}
+
+.dynamic-view-panel-ahr {
+    margin-top: 2svh;
+    background-color: #002D2A;
+    display: flex;
+    margin-bottom: 0.5svh;
+}
+
+.dynamic-view-panel-ahr>div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dynamic-view-panel-ahr>div>div {
+    margin-bottom: 1svh;
+}
+
+.dynamic-view-panel-gain {
+    margin-top: 2svh;
+    height: fit-content;
+    margin-left: 0.5svh;
+    background-color: #002D2A;
+}
+
+.dynamic-view-panel-key {
+    background-color: #002D2A;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dynamic-button-on {
+    width: 7svw;
 }

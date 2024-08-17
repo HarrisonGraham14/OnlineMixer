@@ -133,7 +133,7 @@ class Channel {
 
     updateHtml() {
         let label = this.htmlElement.querySelector(".channel-label");
-        label.innerHTML = this.label;
+        label.innerHTML = this.label == "" ? CHANNEL_NAMES[this.index] : this.label;
         label.style.backgroundColor = COLOR_BACKGROUND[this.labelColor];
         label.style.color = COLOR_TEXT[this.labelColor];
         if (this.pan) this.setPan(this.pan.pan.value * 100);
@@ -141,6 +141,7 @@ class Channel {
     }
 
     updateGainAnalyser() {
+        if (this.htmlElement.style.display != "flex") return;
         let sampleBuffer = new Float32Array(32);
         this.gainAnalyser.getFloatTimeDomainData(sampleBuffer);
         let currentDecibels = 20 * Math.log10(sampleBuffer.reduce((a, b) => Math.max(a, b)));

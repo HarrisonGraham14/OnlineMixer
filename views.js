@@ -31,6 +31,7 @@ const lowerHeading = document.querySelector(".heading-lower");
 const backButton = document.querySelector(".back-button");
 const prevButton = document.querySelector(".prev-button");
 const nextButton = document.querySelector(".next-button");
+const settingsButton = document.querySelector(".settings-button");
 
 // overview channel setup
 let overviewChannel = document.querySelector(".overview-channel")
@@ -56,12 +57,12 @@ function openView(view, channel) {
     currentView = view;
     view.style.display = "flex";
     
-    upperHeading.innerHTML = channels[currentChannel].label;
+    upperHeading.innerHTML = CHANNEL_NAMES[currentChannel] + " " + channels[currentChannel].label;
 
     if (view == overviewView) {
         lowerHeading.innerHTML = "Overview";
         overviewChannel.dataset.channel = channel;
-        overviewChannel.querySelector(".channel-label").innerHTML = channels[channel].label;
+        overviewChannel.querySelector(".channel-label").innerHTML = channels[channel].label == "" ? CHANNEL_NAMES[channel] : channels[channel].label;
         overviewChannel.querySelector(".channel-label").style.color = COLOR_TEXT[channels[channel].labelColor];
         overviewChannel.querySelector(".channel-label").style.backgroundColor = COLOR_BACKGROUND[channels[channel].labelColor];
         overviewChannel.querySelector(".channel-pan-bar").style.width = channels[channel].htmlElement.querySelector(".channel-pan-bar").style.width;
@@ -71,11 +72,34 @@ function openView(view, channel) {
         overviewChannel.querySelector(".fader").value = channels[channel].htmlElement.querySelector(".fader").value;
         overviewChannel.querySelector(".channel-mute").dataset.active = channels[channel].htmlElement.querySelector(".channel-mute").dataset.active;
         overviewChannel.querySelector(".channel-label-const").innerHTML = channels[channel].htmlElement.querySelector(".channel-label-const").innerHTML;
+        
+        if (channels[channel].gain) {
+            overviewGainKnob.htmlElement.style.visibility = "visible";
+            overviewGainKnob.setValue(Math.log2(channels[channel].gain.gain.value) * 6);
+        }
+        else {
+            overviewGainKnob.htmlElement.style.visibility = "hidden";
+        }
 
-        document.querySelector(".overview-view-toggle-bands").dataset.active = channels[currentChannel].htmlElement.querySelector(".channel-eq").dataset.active;
+        if (channel < 16) {
+            document.querySelector(".overview-button-phase").style.visibility = "visible";
+            document.querySelector(".overview-button-phantom").style.visibility = "visible";
+            document.querySelector(".overview-button-link").style.visibility = "visible";
+        }
+        else {
+            document.querySelector(".overview-button-phase").style.visibility = "hidden";
+            document.querySelector(".overview-button-phantom").style.visibility = "hidden";
+            document.querySelector(".overview-button-link").style.visibility = "hidden";
+        }
+
+        if (channels[channel].eq) {
+            document.querySelector(".overview-view-toggle-bands").dataset.active = channels[currentChannel].htmlElement.querySelector(".channel-eq").dataset.active;
+        }
     }
 
-    else if (view == gateView) lowerHeading.innerHTML = "Gate";
+    else if (view == gateView) {
+        lowerHeading.innerHTML = "Gate";
+    }
 
     else if (view == eqView) {
         lowerHeading.innerHTML = "EQ";
@@ -87,14 +111,21 @@ function openView(view, channel) {
 
         document.querySelector(".eq-view-toggle-bands").dataset.active = channels[currentChannel].htmlElement.querySelector(".channel-eq").dataset.active;
         document.querySelector(".eq-view-toggle-highpass").dataset.active = channels[currentChannel].eq.highpassActive;
+        document.querySelector(".rta-channel-select").innerHTML = (channels[currentChannel].label == "" ? CHANNEL_NAMES[currentChannel] : channels[currentChannel].label) + " &#11015;";
     }
 
-    else if (view == dynamicView) lowerHeading.innerHTML = "Dynamic";
-    else if (view == sendsView) lowerHeading.innerHTML = "Sends";
+    else if (view == dynamicView) {
+        lowerHeading.innerHTML = "Dynamic";
+    }
+
+    else if (view == sendsView) {
+        lowerHeading.innerHTML = "Sends";
+    }
 
     backButton.style.display = "block";
     nextButton.style.display = "block";
     prevButton.style.display = "block";
+    if (view != overviewView && view != eqView) settingsButton.style.display = "block";
 }
 
 function closeView() {
@@ -117,6 +148,7 @@ function closeView() {
         nextButton.style.display = "none";
         prevButton.style.display = "none";
     }
+    settingsButton.style.display = "none";
 }
 
 function viewSwitch(direction) {
@@ -126,4 +158,10 @@ function viewSwitch(direction) {
     if (currentView == dynamicView) do currentChannel = (Number(currentChannel) + offset) % 34; while (!channels[currentChannel].compressor);
     if (currentView == eqView || currentView == sendsView) do currentChannel = (Number(currentChannel) + offset) % 34; while (!channels[currentChannel].eq);
     openView(currentView, currentChannel);
+}
+
+function toggleSettings() {
+    settingsButton.dataset.active = settingsButton.dataset.active == "false";
+    let setVisibility = settingsButton.dataset.active == "true" ? "visible" : "hidden";
+    for (let item of document.querySelectorAll(".settings-toggle")) item.style.visibility = setVisibility;
 }

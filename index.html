@@ -30,6 +30,7 @@
             <p class="player-time">0:00</p>
         </div>
 
+        <button class="settings-button banner-button" data-active="false" onclick="toggleSettings()">S/E</button>
         <button class="prev-button banner-button" onclick="viewSwitch('prev')">&#x2190;</button>
         <button class="next-button banner-button" onclick="viewSwitch('next')">&#x2192;</button>
     </div>
@@ -130,10 +131,17 @@
 
         <div class="overview-config overview-panel">
             <button class="plain-button">CONFIG</button>
-            Gain
-            <button class="plain-button">&Oslash;</button>
-            <button class="plain-button">+48V</button>
-            <button class="plain-button">LINK</button>
+            <div class="input-knob overview-knob-gain">
+                <p class="input-knob-title">Gain</p>
+                <div class="input-knob-mask-1"><div class="input-knob-mask-2"><div class="input-knob-mask-3" data-lower-half="true">
+                    <div class="input-knob-highlight"></div>
+                </div></div></div>
+                <div class="input-knob-dial"></div>
+                <p class="input-knob-readout"></p>
+            </div>
+            <button class="plain-button overview-button-phase">&Oslash;</button>
+            <button class="plain-button overview-button-phantom">+48V</button>
+            <button class="plain-button overview-button-link">LINK</button>
         </div>
         
         <div class="overview-gate overview-panel">
@@ -175,7 +183,7 @@
             <button class="plain-button eq-view-toggle-highpass" data-active="false" onclick="toggleHighpass(currentChannel);">Lowcut</button>
             <div style="flex-grow:1"></div>
             <p style="font-size:2svh">RTA</p>
-            <button class="plain-button">CH01 &#11015;</button>
+            <button class="plain-button rta-channel-select">CH01 &#11015;</button>
             <button class="plain-button">Follow</button>
             <button class="plain-button">Post</button>
         </div>
@@ -200,6 +208,76 @@
     </div>
 
     <div class="dynamic-view alt-view">
+        <div class="dynamic-view-panel-main">
+            <div style="display:flex">
+                <div style="flex-grow: 1">
+                    <button class="plain-button dynamic-button-on">ON</button>
+                    <div class="input-knob dynamic-knob-threshhold">
+                        <p class="input-knob-title">Thr</p><div class="input-knob-mask-1"><div class="input-knob-mask-2"><div class="input-knob-mask-3" data-lower-half="true"><div class="input-knob-highlight"></div></div></div></div><div class="input-knob-dial"></div><p class="input-knob-readout"></p>
+                    </div>
+                </div>
+                <div style="height: 60svh; width: 60svh; background-color: black">
+                    
+                </div>
+                <div style="height: 60svh; width: 3svh; background-color: red;">
+
+                </div>
+            </div>
+            <div style="display:flex;flex-grow:1;align-items:end;">
+                <div class="input-knob dynamic-knob-ratio settings-toggle">
+                    <p class="input-knob-title">Ratio</p><div class="input-knob-mask-1"><div class="input-knob-mask-2"><div class="input-knob-mask-3" data-lower-half="true"><div class="input-knob-highlight"></div></div></div></div><div class="input-knob-dial"></div><p class="input-knob-readout"></p>
+                </div>
+                <div class="input-knob dynamic-knob-knee settings-toggle">
+                    <p class="input-knob-title">Knee</p><div class="input-knob-mask-1"><div class="input-knob-mask-2"><div class="input-knob-mask-3" data-lower-half="true"><div class="input-knob-highlight"></div></div></div></div><div class="input-knob-dial"></div><p class="input-knob-readout"></p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="dynamic-view-panel-ahr">
+                <div style="margin-right:0.5svw">
+                    <div class="input-knob dynamic-knob-attack settings-toggle">
+                        <p class="input-knob-title">Attack</p><div class="input-knob-mask-1"><div class="input-knob-mask-2"><div class="input-knob-mask-3" data-lower-half="true"><div class="input-knob-highlight"></div></div></div></div><div class="input-knob-dial"></div><p class="input-knob-readout"></p>
+                    </div>
+                    <button class="small-button" data-active="true">Comp</button>
+                    <br>
+                    <button class="small-button">Exp</button>
+                </div>
+                <div style="margin-right:0.5svw">
+                    <div class="input-knob dynamic-knob-hold settings-toggle">
+                        <p class="input-knob-title">Hold</p><div class="input-knob-mask-1"><div class="input-knob-mask-2"><div class="input-knob-mask-3" data-lower-half="true"><div class="input-knob-highlight"></div></div></div></div><div class="input-knob-dial"></div><p class="input-knob-readout"></p>
+                    </div>
+                    <button class="small-button settings-toggle" data-active="true">Peak</button>
+                    <br>
+                    <button class="small-button settings-toggle">RMS</button>
+                </div>
+                <div>
+                    <div class="input-knob dynamic-knob-release settings-toggle">
+                        <p class="input-knob-title">Release</p><div class="input-knob-mask-1"><div class="input-knob-mask-2"><div class="input-knob-mask-3" data-lower-half="true"><div class="input-knob-highlight"></div></div></div></div><div class="input-knob-dial"></div><p class="input-knob-readout"></p>
+                    </div>
+                    <button class="small-button settings-toggle">Lin</button>
+                    <br>
+                    <button class="small-button settings-toggle" data-active="true">Log</button>
+                </div>
+            </div>
+            <div class="dynamic-view-panel-key">
+                <div class="input-knob dynamic-knob-key settings-toggle">
+                    <p class="input-knob-title">Key Freq</p><div class="input-knob-mask-1"><div class="input-knob-mask-2"><div class="input-knob-mask-3" data-lower-half="true"><div class="input-knob-highlight"></div></div></div></div><div class="input-knob-dial"></div><p class="input-knob-readout"></p>
+                </div>
+                <div style="display:flex;flex-direction:column;">
+                    <button class="small-button settings-toggle">LC 6 &#11015;</button>
+                    <button class="small-button settings-toggle">Self &#11015;</button>
+                </div>
+                <button class="plain-button settings-toggle" style="width:7svw">Key On</button>
+            </div>
+        </div>
+        <div class="dynamic-view-panel-gain">
+            <div class="input-knob dynamic-knob-gain settings-toggle">
+                <p class="input-knob-title">Gain</p><div class="input-knob-mask-1"><div class="input-knob-mask-2"><div class="input-knob-mask-3" data-lower-half="true"><div class="input-knob-highlight"></div></div></div></div><div class="input-knob-dial"></div><p class="input-knob-readout"></p>
+            </div>
+            <div class="input-knob dynamic-knob-mix settings-toggle">
+                <p class="input-knob-title">Mix</p><div class="input-knob-mask-1"><div class="input-knob-mask-2"><div class="input-knob-mask-3" data-lower-half="true"><div class="input-knob-highlight"></div></div></div></div><div class="input-knob-dial"></div><p class="input-knob-readout"></p>
+            </div>
+        </div>
     </div>
 
     <div class="sends-view alt-view">
@@ -221,6 +299,7 @@
     <script src="eq.js"></script>
     <script src="./channel.js"></script>
     <script src="./layers.js"></script>
+    <script src="./knob.js"></script>
     <script src =./views.js></script>
     <script src="./scenes.js"></script>
 </body>

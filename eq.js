@@ -236,6 +236,7 @@ eqHandleDiv.addEventListener("wheel", (event) => {
     let newQ = currentFilter.Q.value + event.deltaY/50;
     newQ = Math.max(0.3, Math.min(newQ, 10));
     currentFilter.Q.setValueAtTime(newQ, 0);
+    if (channels[currentChannel].link) linkedFilter.Q.setValueAtTime(newQ, 0);
     updateEQGraph();
 });
 
@@ -262,6 +263,8 @@ eqHandleDiv.addEventListener("touchmove", (event) => {
                     let newQ = currentFilter.Q.value + deltaQ;
                     newQ = Math.max(0.3, Math.min(newQ, 10));
                     currentFilter.Q.setValueAtTime(newQ, 0);
+
+                    if (channels[currentChannel].link) linkedFilter.Q.setValueAtTime(newQ, 0);
                 }
                 eqTouches[j] = movedTouches[i];
                 return;
@@ -285,7 +288,7 @@ function EQRemoveTouch(event) {
     if (eqTouches.length < 2) updateEQGraph();
 }
 
-function toggleEQ(index) {
+function toggleEQ(index, updateLink = true) {
     channels[index].eq.bandsActive = !channels[index].eq.bandsActive;
     channels[index].htmlElement.querySelector(".channel-eq").dataset.active = channels[index].eq.bandsActive;
     document.querySelector(".eq-view-toggle-bands").dataset.active = channels[index].eq.bandsActive;
@@ -296,6 +299,8 @@ function toggleEQ(index) {
     else channels[index].eq.postHighpass.connect(channels[index].preCompressor);
     
     updateEQGraph();
+
+    if (updateLink && channels[index].link) toggleEQ(Number(index) % 2 == 0 ? Number(index) + 1 : Number(index) - 1, false);
 }
 
 function toggleHighpass(index) {
