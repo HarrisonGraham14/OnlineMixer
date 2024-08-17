@@ -161,7 +161,7 @@
         <div class="overview-dyn overview-panel">
             <button class="plain-button" onclick="openView(dynamicView, currentChannel)">DYN</button>
             <br>
-            <button class="plain-button" data-active="false">On</button>
+            <button class="plain-button overview-toggle-dynamics" data-active="false" onclick="toggleDynamics()">On</button>
             <div class="overview-dyn-graphic"></div>
         </div>
 
@@ -211,16 +211,16 @@
         <div class="dynamic-view-panel-main">
             <div style="display:flex">
                 <div style="flex-grow: 1">
-                    <button class="plain-button dynamic-button-on">ON</button>
-                    <div class="input-knob dynamic-knob-threshhold">
+                    <button class="plain-button dynamic-button-on" data-active="false" onclick="toggleDynamics()">ON</button>
+                    <div class="input-knob dynamic-knob-threshold">
                         <p class="input-knob-title">Thr</p><div class="input-knob-mask-1"><div class="input-knob-mask-2"><div class="input-knob-mask-3" data-lower-half="true"><div class="input-knob-highlight"></div></div></div></div><div class="input-knob-dial"></div><p class="input-knob-readout"></p>
                     </div>
                 </div>
                 <div style="height: 60svh; width: 60svh; background-color: black">
                     
                 </div>
-                <div style="height: 60svh; width: 3svh; background-color: red;">
-
+                <div style="height:60svh;width:3svh;background-color: #515151;">
+                    <div class="dynamics-reduction-bar"></div>
                 </div>
             </div>
             <div style="display:flex;flex-grow:1;align-items:end;">
@@ -296,7 +296,8 @@
 
     <script src="./colors.js"></script>
     <script src="./player.js"></script>
-    <script src="eq.js"></script>
+    <script src="./eq.js"></script>
+    <script src="./compressor.js"></script>
     <script src="./channel.js"></script>
     <script src="./layers.js"></script>
     <script src="./knob.js"></script>

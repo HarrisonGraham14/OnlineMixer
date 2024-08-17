@@ -70,7 +70,8 @@ class Channel {
 
         // all but sends, returns & dca have compression
         if ((index < 25 && (index < 16 || index > 20)) || index == 29) {
-            this.compressor = null; ///to do
+            this.compressor = new Compressor();
+            this.compressor.connect(this.volume);
         }
         else this.htmlElement.querySelector(".channel-dyn").style.visibility = "hidden";
 
@@ -82,7 +83,7 @@ class Channel {
             this.preEq.connect(this.eq.postHighpass);
             this.eq.connect(this.preCompressor);
             this.volume.connect(this.pan);
-            this.pan.connect(audioContext.destination);
+            this.pan.connect(audioContext.destination);///temp
         }
         else {
             this.htmlElement.querySelector(".channel-eq").style.visibility = "hidden";

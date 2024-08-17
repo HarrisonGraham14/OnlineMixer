@@ -36,11 +36,11 @@ const settingsButton = document.querySelector(".settings-button");
 // overview channel setup
 let overviewChannel = document.querySelector(".overview-channel")
 overviewChannel.querySelector(".channel-mute").addEventListener("click", () =>  {
-    overviewChannel.querySelector(".channel-mute").dataset.active = overviewChannel.querySelector(".channel-mute").dataset.active == "true" ? "false" : "true";
+    overviewChannel.querySelector(".channel-mute").dataset.active = overviewChannel.querySelector(".channel-mute").dataset.active == "false";
     channels[overviewChannel.dataset.channel].toggleMute();
 });
 overviewChannel.querySelector(".channel-solo").addEventListener("click", () =>  {
-    overviewChannel.querySelector(".channel-solo").dataset.active = overviewChannel.querySelector(".channel-solo").dataset.active == "true" ? "false" : "true";
+    overviewChannel.querySelector(".channel-solo").dataset.active = overviewChannel.querySelector(".channel-solo").dataset.active == "false";
     channels[overviewChannel.dataset.channel].htmlElement.querySelector(".channel-solo").dataset.active = overviewChannel.querySelector(".channel-solo").dataset.active;
 });
 overviewChannel.querySelector(".fader").addEventListener("input", () =>  {
@@ -48,7 +48,7 @@ overviewChannel.querySelector(".fader").addEventListener("input", () =>  {
     overviewChannel.querySelector(".channel-fader-level").innerHTML = channels[overviewChannel.dataset.channel].htmlElement.querySelector(".channel-fader-level").innerHTML;
 });
 overviewPeakMeterBar = overviewChannel.querySelector(".peak-meter-bar")
-setInterval(function () { overviewPeakMeterBar.style.height = channels[overviewChannel.dataset.channel].peakMeterBar.style.height; }, 50);
+setInterval(function () { if (channels[overviewChannel.dataset.channel].peakMeterBar) overviewPeakMeterBar.style.height = channels[overviewChannel.dataset.channel].peakMeterBar.style.height; }, 50);
 
 let currentView;
 
@@ -93,7 +93,19 @@ function openView(view, channel) {
         }
 
         if (channels[channel].eq) {
+            for (let item of document.querySelectorAll(".overview-eq>*")) item.style.visibility = "visible";
             document.querySelector(".overview-view-toggle-bands").dataset.active = channels[currentChannel].htmlElement.querySelector(".channel-eq").dataset.active;
+        }
+        else {
+            for (let item of document.querySelectorAll(".overview-eq>*")) item.style.visibility = "hidden";
+        }
+
+        if (channels[channel].compressor) {
+            for (let item of document.querySelectorAll(".overview-dyn>*")) item.style.visibility = "visible";
+            document.querySelector(".overview-toggle-dynamics").dataset.active = channels[currentChannel].htmlElement.querySelector(".channel-dyn").dataset.active;
+        }
+        else {
+            for (let item of document.querySelectorAll(".overview-dyn>*")) item.style.visibility = "hidden";
         }
     }
 
@@ -116,6 +128,15 @@ function openView(view, channel) {
 
     else if (view == dynamicView) {
         lowerHeading.innerHTML = "Dynamic";
+        document.querySelector(".dynamic-button-on").dataset.active = channels[currentChannel].htmlElement.querySelector(".channel-dyn").dataset.active;
+        dynamicsThresholdKnob.setValue(channels[channel].compressor.node.threshold.value);
+        dynamicsRatioKnob.setValue(channels[channel].compressor.node.ratio.value);
+        dynamicsKneeKnob.setValue(channels[channel].compressor.node.knee.value);
+        dynamicsAttackKnob.setValue(channels[channel].compressor.node.attack.value * 1000);
+        dynamicsReleaseKnob.setValue(channels[channel].compressor.node.release.value * 1000);
+        dynamicsGainKnob.setValue(Math.log2(channels[channel].compressor.gain.gain.value) * 6);
+        dynamicsMixKnob.setValue(channels[currentChannel].compressor.wet.gain.value * 100);
+        dynamicReductionBarInterval = setInterval(updateDynamicReductionBar, 20);
     }
 
     else if (view == sendsView) {

@@ -700,3 +700,8 @@ button[data-active="true"] {
 .dynamic-button-on {
     width: 7svw;
 }
+
+.dynamics-reduction-bar {
+    width: 100%;
+    background-color: red;
+}
