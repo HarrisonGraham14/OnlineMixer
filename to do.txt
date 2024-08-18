@@ -7,3 +7,10 @@ COMPRESSOR:
 - add graph
 - match reduction bar scale to app 
 - finish overview view
+
+SENDS:
+- add overview view
+- get correct blue colour
+
+GENERAL:
+- make link button work (ch1-16 only)
