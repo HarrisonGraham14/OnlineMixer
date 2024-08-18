@@ -138,6 +138,7 @@ function openView(view, channel) {
         if (channels[channel].compressor) {
             for (let item of document.querySelectorAll(".overview-dyn>*")) item.style.visibility = "visible";
             document.querySelector(".overview-toggle-dynamics").dataset.active = channels[currentChannel].htmlElement.querySelector(".channel-dyn").dataset.active;
+            overviewDynamicsThresholdKnob.setValue(channels[channel].compressor.node.threshold.value);
         }
         else {
             for (let item of document.querySelectorAll(".overview-dyn>*")) item.style.visibility = "hidden";
