@@ -163,12 +163,11 @@ function EQHandleGrabbed(event, handle) {
     else if (handle.dataset.control == "band4") currentFilter = channels[currentChannel].eq.band4;
 
     if (channels[currentChannel].link) {
-        let linkedChannel = Number(currentChannel) % 2 == 0 ? Number(currentChannel) + 1 : Number(currentChannel) - 1;
-        if (handle.dataset.control == "highpass") linkedFilter = channels[linkedChannel].eq.highpass;
-        else if (handle.dataset.control == "band1") linkedFilter = channels[linkedChannel].eq.band1;
-        else if (handle.dataset.control == "band2") linkedFilter = channels[linkedChannel].eq.band2;
-        else if (handle.dataset.control == "band3") linkedFilter = channels[linkedChannel].eq.band3;
-        else if (handle.dataset.control == "band4") linkedFilter = channels[linkedChannel].eq.band4;
+        if (handle.dataset.control == "highpass") linkedFilter = channels[linkIndex(currentChannel)].eq.highpass;
+        else if (handle.dataset.control == "band1") linkedFilter = channels[linkIndex(currentChannel)].eq.band1;
+        else if (handle.dataset.control == "band2") linkedFilter = channels[linkIndex(currentChannel)].eq.band2;
+        else if (handle.dataset.control == "band3") linkedFilter = channels[linkIndex(currentChannel)].eq.band3;
+        else if (handle.dataset.control == "band4") linkedFilter = channels[linkIndex(currentChannel)].eq.band4;
     }
 
     if (event.type == "mousedown") {
@@ -300,7 +299,7 @@ function toggleEQ(index, updateLink = true) {
     
     updateEQGraph();
 
-    if (updateLink && channels[index].link) toggleEQ(Number(index) % 2 == 0 ? Number(index) + 1 : Number(index) - 1, false);
+    if (updateLink && channels[index].link) toggleEQ(linkedIndex(index), false);
 }
 
 function toggleHighpass(index) {

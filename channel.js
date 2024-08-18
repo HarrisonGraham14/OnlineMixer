@@ -18,6 +18,7 @@ class Channel {
     labelColor = BLACK;
 
     link = false;
+    linkIndex;
 
     peakMeterBar;
 
@@ -48,9 +49,11 @@ class Channel {
         this.htmlElement.dataset.index = index;
         CHANNELS_PANEL.appendChild(this.htmlElement);
 
-        // labels
-        this.label = CHANNEL_NAMES[index];
+        // label
         this.htmlElement.querySelector(".channel-label-const").innerHTML = CHANNEL_NAMES[index];
+
+        // dca channels have no overview page
+        if (index >= 30) this.htmlElement.querySelector(".channel-label").onclick = "" ;
 
         // start channels as hidden - load through scene select
         this.htmlElement.style.display = "none";
@@ -73,7 +76,7 @@ class Channel {
             this.source.connect(this.gain);
             this.gain.connect(this.meterAnalyser);
             this.gain.connect(this.preGate);
-            this.gate = null; ///to do
+            this.gate = true; ///to do
         }
         else {
             this.htmlElement.querySelector(".channel-gate").style.visibility = "hidden";
@@ -142,6 +145,13 @@ class Channel {
             this.effect.connect(this.volume);
         }
 
+        ///temp: disable fader for buses and DCA
+        if ((index >= 21 && index <= 24) || (index >= 30 && index <= 33)) {
+            this.setVolume(-Infinity);
+            this.htmlElement.querySelector(".fader").disabled = true;
+            return;
+        }
+
         // input events
         this.htmlElement.querySelector(".fader").addEventListener("input", () => this.pollVolume());
         this.htmlElement.querySelector(".channel-mute").addEventListener("click", () => this.toggleMute());
@@ -164,7 +174,7 @@ class Channel {
         if (updateFader) this.htmlElement.querySelector(".fader").value = dbToFaderValue(dB);
 
         // sets volume of linked channel
-        if (this.link && updateLink) channels[this.index % 2 == 0 ? this.index + 1 : this.index - 1].setVolume(dB, true, false);
+        if (this.link && updateLink) channels[linkIndex(this.index)].setVolume(dB, true, false);
     }
 
     toggleMute(updateLink = true) {
@@ -174,7 +184,7 @@ class Channel {
         else this.volume.disconnect(this.pan);
 
         // toggles linked channel
-        if (this.link && updateLink) channels[this.index % 2 == 0 ? this.index + 1 : this.index - 1].toggleMute(false);
+        if (this.link && updateLink) channels[linkIndex(this.index)].toggleMute(false);
     }
 
     updateHtml() {
@@ -203,7 +213,7 @@ class Channel {
         // pans hard left and right upon linking
         if (value == true) {
             this.setPan(this.index % 2 == 0 ? -100 : 100);
-            channels[this.index % 2 == 0 ? this.index + 1 : this.index - 1].setPan(this.index % 2 == 0 ? 100 : -100);
+            channels[linkIndex(this.index)].setPan(this.index % 2 == 0 ? 100 : -100);
         }
     }
 
@@ -232,6 +242,13 @@ function faderValueToDB(faderValue) {
     if (faderValue < -50) faderValue = faderValue * 2 + 50;
     if (faderValue <= -90) faderValue = -Infinity;
     return faderValue;
+}
+
+function linkIndex(index) {
+    index = Number(index);
+    if (index < 16) return index + (index % 2 ? -1 : 1);
+    else if (index >= 21 && index <= 24) return index + (index % 2 ? 1 : -1);
+    else console.error("Invalid index '" + index + "' passed to linkIndex()");
 }
 
 let channels = [];

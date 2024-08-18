@@ -13,7 +13,7 @@ class Knob {
     units;
     decimalPlaces;
 
-    constructor(htmlElement, updateFunction, min=0, max=1, value=0, units="dB", decimalPlaces = 1) {
+    constructor(htmlElement, updateFunction, min=0, max=1, value=0, units="dB", decimalPlaces = 1, usable = true) {
         this.htmlElement = htmlElement;
         this.updateFunction = updateFunction;
 
@@ -24,8 +24,10 @@ class Knob {
         this.max = max;
         this.setValue(value);
 
-        this.htmlElement.addEventListener("mousedown", this.startInput.bind(this), event);
-        this.htmlElement.addEventListener("touchstart", this.startInput.bind(this), event);
+        if (usable) {
+            this.htmlElement.addEventListener("mousedown", this.startInput.bind(this), event);
+            this.htmlElement.addEventListener("touchstart", this.startInput.bind(this), event);
+        }
     }
 
     updateValue() {
@@ -113,40 +115,40 @@ class Knob {
 
 let overviewGainKnob = new Knob(document.querySelector(".input-knob"), (value) => {
     channels[currentChannel].gain.gain.value = Math.pow(2, value / 6);
-    if (channels[currentChannel].link) channels[Number(currentChannel) % 2 == 0 ? Number(currentChannel) + 1 : Number(currentChannel) - 1].gain.gain.value = Math.pow(2, value / 6);
+    if (channels[currentChannel].link) channels[linkedIndex(currentChannel)].gain.gain.value = Math.pow(2, value / 6);
 }, -12, 60, 0);
 
 let dynamicsThresholdKnob = new Knob(document.querySelector(".dynamic-knob-threshold"), (value) => {
     channels[currentChannel].compressor.setThreshold(value);
-    if (channels[currentChannel].link) channels[Number(currentChannel) % 2 == 0 ? Number(currentChannel) + 1 : Number(currentChannel) - 1].compressor.setThreshold(value);
+    if (channels[currentChannel].link) channels[linkedIndex(currentChannel)].compressor.setThreshold(value);
 }, -60, 0, -60);
 
 let dynamicsRatioKnob = new Knob(document.querySelector(".dynamic-knob-ratio"), (value) => {
     channels[currentChannel].compressor.setRatio(value);
-    if (channels[currentChannel].link) channels[Number(currentChannel) % 2 == 0 ? Number(currentChannel) + 1 : Number(currentChannel) - 1].compressor.setRatio(value);
+    if (channels[currentChannel].link) channels[linkedIndex(currentChannel)].compressor.setRatio(value);
 }, 1.1, 20, 1.1, "");
 
 let dynamicsKneeKnob = new Knob(document.querySelector(".dynamic-knob-knee"), (value) => {
     channels[currentChannel].compressor.setKnee(value);
-    if (channels[currentChannel].link) channels[Number(currentChannel) % 2 == 0 ? Number(currentChannel) + 1 : Number(currentChannel) - 1].compressor.setKnee(value);
+    if (channels[currentChannel].link) channels[linkedIndex(currentChannel)].compressor.setKnee(value);
 }, 0, 5, 0, "", 0);
 
 let dynamicsAttackKnob = new Knob(document.querySelector(".dynamic-knob-attack"), (value) => {
     channels[currentChannel].compressor.setAttack(value / 1000);
-    if (channels[currentChannel].link) channels[Number(currentChannel) % 2 == 0 ? Number(currentChannel) + 1 : Number(currentChannel) - 1].compressor.setAttack(value / 1000);
+    if (channels[currentChannel].link) channels[linkedIndex(currentChannel)].compressor.setAttack(value / 1000);
 }, 0, 120, 24, "ms", 0);
 
 let dynamicsHoldKnob = new Knob(document.querySelector(".dynamic-knob-hold"), (value) => {
-}, 0.02, 2000, 0.2, "ms", 2);
+}, 0.02, 2000, 0.2, "ms", 2, false);
 
 let dynamicsReleaseKnob = new Knob(document.querySelector(".dynamic-knob-release"), (value) => {
     channels[currentChannel].compressor.setRelease(value / 1000);
-    if (channels[currentChannel].link) channels[Number(currentChannel) % 2 == 0 ? Number(currentChannel) + 1 : Number(currentChannel) - 1].compressor.setRelease(value / 1000);
+    if (channels[currentChannel].link) channels[linkedIndex(currentChannel)].compressor.setRelease(value / 1000);
 }, 5, 200, 19, "ms", 0);
 
 let dynamicsGainKnob = new Knob(document.querySelector(".dynamic-knob-gain"), (value) => {
     channels[currentChannel].compressor.setGain(value);
-    if (channels[currentChannel].link) channels[Number(currentChannel) % 2 == 0 ? Number(currentChannel) + 1 : Number(currentChannel) - 1].compressor.setGain(value);
+    if (channels[currentChannel].link) channels[linkedIndex(currentChannel)].compressor.setGain(value);
 }, 0, 24, 0);
 
 let dynamicsMixKnob = new Knob(document.querySelector(".dynamic-knob-mix"), (value) => {
@@ -154,4 +156,4 @@ let dynamicsMixKnob = new Knob(document.querySelector(".dynamic-knob-mix"), (val
 }, 0, 100, 100, "%");
 
 let dynamicsKeyKnob = new Knob(document.querySelector(".dynamic-knob-key"), (value) => {
-}, 20, 20000, 20, "Hz");
+}, 20, 20000, 20, "Hz", 1, false);

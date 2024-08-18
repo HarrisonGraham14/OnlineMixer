@@ -17,6 +17,9 @@ function updatePanner() {
     if (currentChannel == panOverlay.dataset.channel) {
         overviewChannel.querySelector(".channel-pan-bar").style.width = channels[panOverlay.dataset.channel].htmlElement.querySelector(".channel-pan-bar").style.width;
         overviewChannel.querySelector(".channel-pan-bar").style.left = channels[panOverlay.dataset.channel].htmlElement.querySelector(".channel-pan-bar").style.left;
+
+        sendsView.querySelector(".channel-pan-bar").style.width = channels[panOverlay.dataset.channel].htmlElement.querySelector(".channel-pan-bar").style.width;
+        sendsView.querySelector(".channel-pan-bar").style.left = channels[panOverlay.dataset.channel].htmlElement.querySelector(".channel-pan-bar").style.left;
     }
 }
 
@@ -89,7 +92,14 @@ function openView(view, channel) {
         else {
             document.querySelector(".overview-button-phase").style.visibility = "hidden";
             document.querySelector(".overview-button-phantom").style.visibility = "hidden";
-            document.querySelector(".overview-button-link").style.visibility = "hidden";
+            document.querySelector(".overview-button-link").style.visibility = (channel < 21 || channel > 24) ? "hidden" : "visible";
+        }
+
+        if (channels[channel].gate) {
+            for (let item of document.querySelectorAll(".overview-gate>*")) item.style.visibility = "visible";
+        }
+        else {
+            for (let item of document.querySelectorAll(".overview-gate>*")) item.style.visibility = "hidden";
         }
 
         if (channels[channel].eq) {
@@ -106,6 +116,13 @@ function openView(view, channel) {
         }
         else {
             for (let item of document.querySelectorAll(".overview-dyn>*")) item.style.visibility = "hidden";
+        }
+
+        if (channels[channel].preFX1) {
+            for (let item of document.querySelectorAll(".overview-sends>*")) item.style.visibility = "visible";
+        }
+        else {
+            for (let item of document.querySelectorAll(".overview-sends>*")) item.style.visibility = "hidden";
         }
     }
 
@@ -141,6 +158,25 @@ function openView(view, channel) {
 
     else if (view == sendsView) {
         lowerHeading.innerHTML = "Sends";
+        sendsView.querySelector(".channel-pan-bar").style.width = channels[channel].htmlElement.querySelector(".channel-pan-bar").style.width;
+        sendsView.querySelector(".channel-pan-bar").style.left = channels[channel].htmlElement.querySelector(".channel-pan-bar").style.left;
+        bus1SendFader.querySelector(".fader").value = dbToFaderValue(-Infinity);
+        bus2SendFader.querySelector(".fader").value = dbToFaderValue(-Infinity);
+        bus3SendFader.querySelector(".fader").value = dbToFaderValue(-Infinity);
+        bus4SendFader.querySelector(".fader").value = dbToFaderValue(-Infinity);
+        FX1SendFader.querySelector(".fader").value = dbToFaderValue(Math.log2(channels[channel].preFX1.gain.value) * 6);
+        FX2SendFader.querySelector(".fader").value = dbToFaderValue(Math.log2(channels[channel].preFX2.gain.value) * 6);
+        FX3SendFader.querySelector(".fader").value = dbToFaderValue(Math.log2(channels[channel].preFX3.gain.value) * 6);
+        FX4SendFader.querySelector(".fader").value = dbToFaderValue(Math.log2(channels[channel].preFX4.gain.value) * 6);
+        
+        bus1SendFader.querySelector(".sends-fader-label").innerHTML = channels[21].label == "" ? CHANNEL_NAMES[21] : channels[21].label;
+        bus2SendFader.querySelector(".sends-fader-label").innerHTML = channels[22].label == "" ? CHANNEL_NAMES[22] : channels[22].label;
+        bus3SendFader.querySelector(".sends-fader-label").innerHTML = channels[23].label == "" ? CHANNEL_NAMES[23] : channels[23].label;
+        bus4SendFader.querySelector(".sends-fader-label").innerHTML = channels[24].label == "" ? CHANNEL_NAMES[24] : channels[24].label;
+        FX1SendFader.querySelector(".sends-fader-label").innerHTML = channels[25].label == "" ? CHANNEL_NAMES[25] : channels[25].label;
+        FX2SendFader.querySelector(".sends-fader-label").innerHTML = channels[26].label == "" ? CHANNEL_NAMES[26] : channels[26].label;
+        FX3SendFader.querySelector(".sends-fader-label").innerHTML = channels[27].label == "" ? CHANNEL_NAMES[27] : channels[27].label;
+        FX4SendFader.querySelector(".sends-fader-label").innerHTML = channels[28].label == "" ? CHANNEL_NAMES[28] : channels[28].label;
     }
 
     backButton.style.display = "block";
@@ -173,11 +209,12 @@ function closeView() {
 }
 
 function viewSwitch(direction) {
-    let offset = (direction == "next") ? 1 : 33;
-    if (currentView == overviewView) currentChannel = (Number(currentChannel) + offset) % 34;
-    if (currentView == gateView) do currentChannel = (Number(currentChannel) + offset) % 34; while (!channels[currentChannel].gate);
-    if (currentView == dynamicView) do currentChannel = (Number(currentChannel) + offset) % 34; while (!channels[currentChannel].compressor);
-    if (currentView == eqView || currentView == sendsView) do currentChannel = (Number(currentChannel) + offset) % 34; while (!channels[currentChannel].eq);
+    let offset = (direction == "next") ? 1 : 29;
+    if (currentView == overviewView) currentChannel = (Number(currentChannel) + offset) % 30;
+    if (currentView == gateView) do currentChannel = (Number(currentChannel) + offset) % 30; while (!channels[currentChannel].gate);
+    if (currentView == dynamicView) do currentChannel = (Number(currentChannel) + offset) % 30; while (!channels[currentChannel].compressor);
+    if (currentView == eqView) do currentChannel = (Number(currentChannel) + offset) % 30; while (!channels[currentChannel].eq);
+    if (currentView == sendsView) do currentChannel = (Number(currentChannel) + offset) % 30; while (!channels[currentChannel].preFX1);
     openView(currentView, currentChannel);
 }
 
@@ -185,4 +222,6 @@ function toggleSettings() {
     settingsButton.dataset.active = settingsButton.dataset.active == "false";
     let setVisibility = settingsButton.dataset.active == "true" ? "visible" : "hidden";
     for (let item of document.querySelectorAll(".settings-toggle")) item.style.visibility = setVisibility;
+    document.querySelector(".sends-routing").style.display = settingsButton.dataset.active == "true" ? "flex" : "none";
+    for (let item of document.querySelectorAll(".sends-channel")) item.dataset.settings = settingsButton.dataset.active == "true";
 }

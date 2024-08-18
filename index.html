@@ -281,6 +281,46 @@
     </div>
 
     <div class="sends-view alt-view">
+        <div style="display:flex;flex-grow:1">
+            <div class="channel sends-channel" data-settings="false" data-channel="21">
+                <div class="channel-fader">
+                    <p class="channel-fader-level">-&infin;</p>
+                    <p class="sends-fader-label">Bus 1</p>
+                    <div class="channel-fader-ticks sends-channel-ticks"></div>
+                    <div class="channel-fader-ticks sends-channel-ticks sends-major-tick"></div>
+                    <div class="channel-fader-tick-labels sends-fader-tick-labels">
+                        <p>10</p>
+                        <p>5</p>
+                        <p>0</p>
+                        <p>5</p>
+                        <p>10</p>
+                        <p>20</p>
+                        <p>30</p>
+                        <p>50</p>
+                    </div>
+                    <div class="channel-fader-groove sends-fader-groove" data-settings="false"></div>
+                    <input class="fader sends-fader" data-settings="false" type="range" min="-30" max="10" step="0.05" value="-30" oninput="updateSendFader(this)">
+                    <div class="peak-meter">
+                        <div class="peak-meter-bar"></div>
+                    </div>
+                    <p class="channel-label-const">Bus 1</p>
+                </div>
+            </div>
+        </div>
+        <button class="channel-pan channel-green sends-panner" onclick="openPanner(currentChannel)">
+            <div class="channel-pan-center"></div>
+            <div class="channel-pan-bar"></div>
+        </button>
+        <div class="sends-routing">
+            <button class="plain-button">IN &#11015;</button>
+            <button class="plain-button">IN &#11015;</button>
+            <button class="plain-button">IN &#11015;</button>
+            <button class="plain-button">IN &#11015;</button>
+            <button class="plain-button">IN &#11015;</button>
+            <button class="plain-button">IN &#11015;</button>
+            <button class="plain-button">IN &#11015;</button>
+            <button class="plain-button">IN &#11015;</button>
+        </div>
     </div>
 
     <div class="pan-overlay" data-channel="">
@@ -299,6 +339,7 @@
     <script src="./eq.js"></script>
     <script src="./compressor.js"></script>
     <script src="./channel.js"></script>
+    <script src="./sends.js"></script>
     <script src="./layers.js"></script>
     <script src="./knob.js"></script>
     <script src =./views.js></script>

@@ -3,11 +3,7 @@ EQ:
 - add graph to overview
 
 COMPRESSOR:
-- remove make up gain 
-- make gain/blend functional
+- remove make-up gain (?)
 - add graph
 - match reduction bar scale to app 
 - finish overview view
-
-GENERAL:
-- disable input to knobs which do nothing

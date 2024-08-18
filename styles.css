@@ -170,6 +170,7 @@ p {
 .channel-pan-center {
     background-color: #10E5EB;
     width: 0.4svh;
+    margin-left: -0.2svh;
     height: 100%;
     position: relative;
     left: 50%;
@@ -220,7 +221,6 @@ p {
 }
 
 .channel-fader {
-    background-color: #292C31;
     flex-grow: 1;
     color: white;
     position: relative;
@@ -704,4 +704,99 @@ button[data-active="true"] {
 .dynamics-reduction-bar {
     width: 100%;
     background-color: red;
+}
+
+.sends-view {
+    flex-direction: column;
+}
+
+.sends-panner {
+    width: 20svw;
+    position: absolute;
+}
+
+.sends-panner>.channel-pan-center {
+    width: 0.4svw;
+    margin-left: -0.2svw;
+}
+
+.sends-routing {
+    width: 100%;
+    position:absolute;
+    bottom: 0%;
+    display: none;
+}
+
+.sends-routing>button {
+    flex-grow: 1;
+}
+
+.sends-channel {
+    background-color: #3B3D3A;
+    margin-right: 0px;
+    padding-top: 5.5svh;
+    flex-grow: 1;
+    height: auto;
+    border-left: 0.15svw solid #3B3D3A;
+}
+
+.sends-channel[data-settings="true"] {
+    padding-bottom: 9svh;
+}
+
+.sends-fader {
+    width: 71.5svh;
+    margin: 35.25svh -35.75svh;
+    top: 10svh;
+}
+
+.sends-channel[data-settings="true"]>div>.sends-fader {
+    width: 63svh;
+    margin: 31svh -31.5svh;
+}
+
+.sends-fader-groove {
+    top: 15.5svh;
+    height: 59.5svh;
+    margin: 0px -0.5svh;
+}
+
+.sends-channel[data-settings="true"]>div>.sends-fader-groove {
+    top: 15.5svh;
+    height: 52svh;
+    margin: 0px -0.5svh;
+}
+
+.sends-channel-ticks {
+    background: repeating-linear-gradient(to bottom, #B9BABC, #B9BABC 1px, transparent 2px, transparent 7.4375svh);
+    height: 59.5svh;
+    margin: 0px -25%;
+    top: 15.5svh
+}
+
+.sends-channel[data-settings="true"]>div>.sends-channel-ticks {
+    background: repeating-linear-gradient(to bottom, #B9BABC, #B9BABC 1px, transparent 2px, transparent 6.5svh);
+    height: 52svh;
+}
+
+.sends-major-tick {
+    background: linear-gradient(to bottom, transparent calc(14.875svh - 2px), white calc(14.875svh - 2px), white calc(14.875svh + 3px), transparent calc(14.875svh + 3px));
+    height: 59.5svh;
+    margin: 0px -25%;
+    top: 15.5svh
+}
+
+.sends-channel[data-settings="true"]>div>.sends-major-tick {
+    background: linear-gradient(to bottom, transparent calc(13svh - 2px), white calc(13svh - 2px), white calc(13svh + 3px), transparent calc(13svh + 3px));
+    height: 52svh;
+}
+
+.sends-fader-tick-labels {
+    height: 54svh;
+    margin: 0px 30%;
+    top: 14.4svh
+}
+
+.sends-channel[data-settings="true"]>div>.sends-fader-tick-labels {
+    height: 47.5svh;
 }
