@@ -141,7 +141,7 @@
             </div>
             <button class="plain-button overview-button-phase">&Oslash;</button>
             <button class="plain-button overview-button-phantom">+48V</button>
-            <button class="plain-button overview-button-link">LINK</button>
+            <button class="plain-button overview-button-link" data-active="false" onclick="linkButtonPressed()">LINK</button>
         </div>
         
         <div class="overview-gate overview-panel">
@@ -149,6 +149,9 @@
             <br>
             <button class="plain-button" data-active="false">On</button>
             <div class="overview-gate-graphic"></div>
+            <div class="input-knob overview-knob-gate-threshold">
+                <p class="input-knob-title">Thr</p><div class="input-knob-mask-1"><div class="input-knob-mask-2"><div class="input-knob-mask-3" data-lower-half="true"><div class="input-knob-highlight"></div></div></div></div><div class="input-knob-dial"></div><p class="input-knob-readout"></p>
+            </div>
         </div>
 
         <div class="overview-eq overview-panel">
@@ -163,6 +166,9 @@
             <br>
             <button class="plain-button overview-toggle-dynamics" data-active="false" onclick="toggleDynamics()">On</button>
             <div class="overview-dyn-graphic"></div>
+            <div class="input-knob overview-knob-dynamic-threshold">
+                <p class="input-knob-title">Thr</p><div class="input-knob-mask-1"><div class="input-knob-mask-2"><div class="input-knob-mask-3" data-lower-half="true"><div class="input-knob-highlight"></div></div></div></div><div class="input-knob-dial"></div><p class="input-knob-readout"></p>
+            </div>
         </div>
 
         <div class="overview-sends overview-panel">
@@ -332,6 +338,20 @@
             <input class="pan-slider" type="range" min="-100" max="100" step="2" value="0" oninput="updatePanner()">
         </div>
         <button class="pan-overlay-button" onclick="this.parentNode.style.display = 'none'"></button>
+    </div>
+
+    <div class="link-overlay">
+        <div class="link-overlay-panel">
+            <h3>Channel Link</h3>
+            <hr style="color: #39B4E0">
+            <p>Do you want to link _ and _ ?</p>
+            <hr style="color:#515151;margin:0px;">
+            <div>
+                <button onclick="linkOverlay.style.display = 'none'">No</button>
+                <div style="background-color:#515151;width:2px;height:6svh;" class="test"></div>
+                <button onclick="confirmLink()">Yes</button>
+            </div>
+        </div>
     </div>
 
     <script src="./colors.js"></script>

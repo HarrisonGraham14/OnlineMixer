@@ -118,6 +118,15 @@ let overviewGainKnob = new Knob(document.querySelector(".input-knob"), (value) =
     if (channels[currentChannel].link) channels[linkedIndex(currentChannel)].gain.gain.value = Math.pow(2, value / 6);
 }, -12, 60, 0);
 
+let overviewGateThresholdKnob = new Knob(document.querySelector(".overview-knob-gate-threshold"), (value) => {
+}, -80, 0, -80, "dB", 1, false);
+
+let overviewDynamicsThresholdKnob = new Knob(document.querySelector(".overview-knob-dynamic-threshold"), (value) => {
+    channels[currentChannel].compressor.setThreshold(value);
+    if (channels[currentChannel].link) channels[linkedIndex(currentChannel)].compressor.setThreshold(value);
+}, -60, 0, -60);
+
+
 let dynamicsThresholdKnob = new Knob(document.querySelector(".dynamic-knob-threshold"), (value) => {
     channels[currentChannel].compressor.setThreshold(value);
     if (channels[currentChannel].link) channels[linkedIndex(currentChannel)].compressor.setThreshold(value);

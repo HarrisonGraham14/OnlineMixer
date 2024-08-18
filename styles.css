@@ -507,6 +507,7 @@ button[data-active="true"] {
 .overview-gate-graphic {
     width: 13svw;
     height: 13svw;
+    margin-top: 18svh;
     margin-left: 1svw;
     background-color: #000000;
     align-self: center;
@@ -519,6 +520,7 @@ button[data-active="true"] {
 .overview-eq-graphic {
     width: 100%;
     height: 40%;
+    margin-top: 10.5svh;
     background-color: #000000;
     align-self: center;
 }
@@ -530,6 +532,7 @@ button[data-active="true"] {
 .overview-dyn-graphic {
     width: 13svw;
     height: 13svw;
+    margin-top: 18svh;
     margin-left: 1svw;
     background-color: #000000;
     align-self: center;
@@ -799,4 +802,47 @@ button[data-active="true"] {
 
 .sends-channel[data-settings="true"]>div>.sends-fader-tick-labels {
     height: 47.5svh;
+}
+
+.link-overlay {
+    position: absolute;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    top: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.link-overlay-panel {
+    width: 54svw;
+    background-color: #24282B;
+}
+
+.link-overlay-panel>h3 {
+    color: #39B4E0;
+    font-size: 3.5svh;
+    margin: 1.5svh 2svh;
+    font-weight: normal;
+}
+
+.link-overlay-panel>p {
+    color: white;
+    font-size: 2.5svh;
+    margin: 1svh 0svh 3.5svh 2svh;
+}
+
+.link-overlay-panel>div {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.link-overlay-panel>div>button {
+    height: 6svh;
+    width: 10svh;
+    flex-grow: 1;
+    margin: 0px;
+    outline: black none 0px;
 }

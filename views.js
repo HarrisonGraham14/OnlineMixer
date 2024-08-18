@@ -23,6 +23,29 @@ function updatePanner() {
     }
 }
 
+const linkOverlay = document.querySelector(".link-overlay");
+const linkButton = document.querySelector(".overview-button-link");
+
+function linkButtonPressed() {
+    if (channels[currentChannel].link) {
+        channels[currentChannel].setLink(false);
+        linkButton.dataset.active = false;
+        return;
+    }
+    if (currentChannel >= 16) return; ///temp
+    let lowerChannel = Math.min(Number(currentChannel), linkIndex(currentChannel));
+    let label1 = channels[lowerChannel].label == "" ? CHANNEL_NAMES[lowerChannel] : channels[lowerChannel].label;
+    let label2 = channels[lowerChannel + 1].label == "" ? CHANNEL_NAMES[lowerChannel + 1] : channels[lowerChannel + 1].label;
+    linkOverlay.querySelector("p").innerHTML = "Do you want to link " + label1 + " and " + label2 + " ?";
+    linkOverlay.style.display = "flex";
+}
+
+function confirmLink() {
+    linkOverlay.style.display = "none";
+    channels[currentChannel].setLink(true);
+    linkButton.dataset.active = true;
+}
+
 const overviewView = document.querySelector(".overview-view");
 const gateView = document.querySelector(".gate-view");
 const eqView = document.querySelector(".eq-view");
@@ -75,6 +98,7 @@ function openView(view, channel) {
         overviewChannel.querySelector(".fader").value = channels[channel].htmlElement.querySelector(".fader").value;
         overviewChannel.querySelector(".channel-mute").dataset.active = channels[channel].htmlElement.querySelector(".channel-mute").dataset.active;
         overviewChannel.querySelector(".channel-label-const").innerHTML = channels[channel].htmlElement.querySelector(".channel-label-const").innerHTML;
+        linkButton.dataset.active = channels[channel].link;
         
         if (channels[channel].gain) {
             overviewGainKnob.htmlElement.style.visibility = "visible";
@@ -97,6 +121,7 @@ function openView(view, channel) {
 
         if (channels[channel].gate) {
             for (let item of document.querySelectorAll(".overview-gate>*")) item.style.visibility = "visible";
+            overviewGateThresholdKnob.setValue
         }
         else {
             for (let item of document.querySelectorAll(".overview-gate>*")) item.style.visibility = "hidden";

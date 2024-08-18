@@ -1,3 +1,6 @@
+GAIN:
+- add graph to overview view
+
 EQ:
 - try different graphing library
 - add graph to overview
@@ -5,12 +8,8 @@ EQ:
 COMPRESSOR:
 - remove make-up gain (?)
 - add graph
+    - also to overview
 - match reduction bar scale to app 
-- finish overview view
 
 SENDS:
 - add overview view
-- get correct blue colour
-
-GENERAL:
-- make link button work (ch1-16 only)
