@@ -16,7 +16,7 @@ bus4SendFader.querySelector(".channel-label-const").innerHTML = CHANNEL_NAMES[24
 
 const FX1SendFader = bus1SendFader.cloneNode(true);
 bus1SendFader.parentElement.appendChild(FX1SendFader);
-FX1SendFader.style.backgroundColor = "#40B1DB";
+FX1SendFader.style.backgroundColor = "#295D73";
 FX1SendFader.querySelector(".channel-label-const").innerHTML = CHANNEL_NAMES[25];
 FX1SendFader.querySelector(".fader").disabled = false;
 
