@@ -493,11 +493,13 @@ button[data-active="true"] {
 }
 
 .overview-panel {
+    display: flex;
+    flex-direction: column;
     margin-right: 0.2%;
     width: 7%;
     height: 100%;
     background-color: #002D2A;
-    text-align: center;
+    align-items: center;
 }
 
 .overview-gate {
@@ -508,7 +510,6 @@ button[data-active="true"] {
     width: 13svw;
     height: 13svw;
     margin-top: 18svh;
-    margin-left: 1svw;
     background-color: #000000;
     align-self: center;
 }
@@ -533,7 +534,6 @@ button[data-active="true"] {
     width: 13svw;
     height: 13svw;
     margin-top: 18svh;
-    margin-left: 1svw;
     background-color: #000000;
     align-self: center;
 }
@@ -845,4 +845,33 @@ button[data-active="true"] {
     flex-grow: 1;
     margin: 0px;
     outline: black none 0px;
+}
+
+.overview-send-meter {
+    flex-grow: 1;
+    width: 100%;
+    display: flex;
+    justify-content: right;
+    margin: 3px;
+}
+
+.overview-send-meter>div {
+    height: 100%;
+    width: 85%;
+    border:#176363 solid 2px;
+    display:flex;
+    align-items: center;
+    margin-right: 3px;
+}
+
+.overview-send-meter>div>p {
+    color: white;
+    font-size: 3svh;
+    position: absolute;
+}
+
+.overview-send-meter-fill {
+    height: 100%;
+    width: 0%;
+    background-color: #39B7B6;
 }

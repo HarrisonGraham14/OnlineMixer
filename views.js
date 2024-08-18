@@ -145,6 +145,19 @@ function openView(view, channel) {
 
         if (channels[channel].preFX1) {
             for (let item of document.querySelectorAll(".overview-sends>*")) item.style.visibility = "visible";
+            bus1SendMeter.querySelector("p").innerHTML = channels[21].label == "" ? CHANNEL_NAMES[21] : channels[21].label;
+            bus2SendMeter.querySelector("p").innerHTML = channels[22].label == "" ? CHANNEL_NAMES[22] : channels[22].label;
+            bus3SendMeter.querySelector("p").innerHTML = channels[23].label == "" ? CHANNEL_NAMES[23] : channels[23].label;
+            bus4SendMeter.querySelector("p").innerHTML = channels[24].label == "" ? CHANNEL_NAMES[24] : channels[24].label;
+            FX1SendMeter.querySelector("p").innerHTML = channels[25].label == "" ? CHANNEL_NAMES[25] : channels[25].label;
+            FX2SendMeter.querySelector("p").innerHTML = channels[26].label == "" ? CHANNEL_NAMES[26] : channels[26].label;
+            FX3SendMeter.querySelector("p").innerHTML = channels[27].label == "" ? CHANNEL_NAMES[27] : channels[27].label;
+            FX4SendMeter.querySelector("p").innerHTML = channels[28].label == "" ? CHANNEL_NAMES[28] : channels[28].label;
+
+            FX1SendMeter.querySelector(".overview-send-meter-fill").style.width = (dbToFaderValue(Math.log2(channels[channel].preFX1.gain.value) * 6) / 40 + 0.75) *100 + "%";
+            FX2SendMeter.querySelector(".overview-send-meter-fill").style.width = (dbToFaderValue(Math.log2(channels[channel].preFX2.gain.value) * 6) / 40 + 0.75) *100 + "%";
+            FX3SendMeter.querySelector(".overview-send-meter-fill").style.width = (dbToFaderValue(Math.log2(channels[channel].preFX3.gain.value) * 6) / 40 + 0.75) *100 + "%";
+            FX4SendMeter.querySelector(".overview-send-meter-fill").style.width = (dbToFaderValue(Math.log2(channels[channel].preFX4.gain.value) * 6) / 40 + 0.75) *100 + "%";
         }
         else {
             for (let item of document.querySelectorAll(".overview-sends>*")) item.style.visibility = "hidden";

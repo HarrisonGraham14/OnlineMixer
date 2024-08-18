@@ -52,3 +52,26 @@ function updateSendFader(fader){
         channels[currentChannel].preFX4.gain.setValueAtTime(Math.pow(2, dB / 6), 0);
     }
 }
+
+const bus1SendMeter = document.querySelector(".overview-send-meter");
+
+const bus2SendMeter = bus1SendMeter.cloneNode(true);
+bus1SendMeter.parentElement.appendChild(bus2SendMeter);
+
+const bus3SendMeter = bus1SendMeter.cloneNode(true);
+bus1SendMeter.parentElement.appendChild(bus3SendMeter);
+
+const bus4SendMeter = bus1SendMeter.cloneNode(true);
+bus1SendMeter.parentElement.appendChild(bus4SendMeter);
+
+const FX1SendMeter = bus1SendMeter.cloneNode(true);
+bus1SendMeter.parentElement.appendChild(FX1SendMeter);
+
+const FX2SendMeter = bus1SendMeter.cloneNode(true);
+bus1SendMeter.parentElement.appendChild(FX2SendMeter);
+
+const FX3SendMeter = bus1SendMeter.cloneNode(true);
+bus1SendMeter.parentElement.appendChild(FX3SendMeter);
+
+const FX4SendMeter = bus1SendMeter.cloneNode(true);
+bus1SendMeter.parentElement.appendChild(FX4SendMeter);

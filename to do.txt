@@ -10,6 +10,3 @@ COMPRESSOR:
 - add graph
     - also to overview
 - match reduction bar scale to app 
-
-SENDS:
-- add overview view
