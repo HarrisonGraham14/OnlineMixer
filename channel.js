@@ -65,7 +65,7 @@ class Channel {
         // peak meter
         this.peakMeterBar = this.htmlElement.querySelector(".peak-meter-bar");
         this.peakMeterBar.style.height = "100%";
-        setInterval(this.updatemeterAnalyser.bind(this), 50);
+        ///setInterval(this.updatemeterAnalyser.bind(this), 50);
         this.meterAnalyser.fftSize = 32;
 
         // only channels 1-16 have input/gain/gates
@@ -94,7 +94,8 @@ class Channel {
         if (index < 25 || index == 29) {
             this.eq = new EQ();
             this.pan = new StereoPannerNode(audioContext);
-            
+
+            this.preEq.disconnect();
             this.preEq.connect(this.eq.postHighpass);
             this.eq.connect(this.preCompressor);
             this.volume.connect(this.pan);
@@ -105,7 +106,7 @@ class Channel {
         }
 
         // channels 1-16 and aux/fx have sends
-        if (index < 21) {
+        if (index < 21 && index < 16) {
             this.preFX1 = new GainNode(audioContext);
             this.preFX2 = new GainNode(audioContext);
             this.preFX3 = new GainNode(audioContext);
