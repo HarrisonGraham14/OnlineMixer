@@ -11,7 +11,7 @@ class Compressor {
         this.setKnee(0);
         this.setAttack(0.024);
         this.setRelease(0.019);
-        this.setMix(0.0);
+        this.setMix(1.0);
 
         this.splitter.connect(this.node);
         this.splitter.connect(this.dry);
